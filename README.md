@@ -99,6 +99,7 @@ metadata.head()
 
 ```
 local_dir = 'TCGA_data'  # Change the folder path as needed
+
 snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics", 
                   local_dir=local_dir,
                   allow_patterns="TCGA_SKCM/FFPE/TCGA-D9-A3Z3-06Z-00-DX1.C4820632-C64D-4661-94DD-9F27F75519C3.h5ad.gz",
@@ -113,10 +114,12 @@ sq.pl.spatial_scatter(adata,
 ```
 ![example](/figures/tcga_example.png)
 
-### Download the entire TCGA digital spatial transcriptomics data
+### Download the entire TCGA digital spatial transcriptomics dataset
 
 ```
 local_dir = 'TCGA_data'  # Change the folder path as needed
+
+# Note that the full dataset is around 2TB
 
 snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics", 
                   local_dir=local_dir,
