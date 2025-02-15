@@ -1,0 +1,11 @@
+*.pkl*
+*ipynb_checkpoints*
+*weights.pkl
+example_data/data/image_features*
+*.csv
+*.yaml
+*/__pycache__/*
+build/*
+deepspot.egg-info
+dist/*
+*.pyc

@@ -1,0 +1,33 @@
+name: deepspot
+
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  - python==3.9
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.4
+  - numpy
+  - pandas
+  - scipy
+  - anndata
+  - scanpy
+  - squidpy
+  - matplotlib
+  - torchvision
+  - pyvips
+  - scikit-learn
+  - pyvips
+  - lightning
+  
+  - pip:
+      - plotnine
+      - ipykernel
+      - huggingface_hub
+      - transformers
+      - timm
+      - scikit-misc
