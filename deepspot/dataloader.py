@@ -68,7 +68,7 @@ class DeepSpotDataLoader(Dataset):
 
             if "neighbors" in self.spot_context:
                 for _, spot in coordinates.iterrows():
-                    coordinates["neighbors"] = compute_neighbors(spot, coordinates, self.radius_neighbors)
+                    coordinates.loc[spot.name, "neighbors"] = compute_neighbors(spot, coordinates, self.radius_neighbors)
                 max_n_neighbors = coordinates["neighbors"].apply(lambda x: len(x.split("___"))).max()
                 if self.max_n_neighbors < max_n_neighbors:
                     self.max_n_neighbors = max_n_neighbors
