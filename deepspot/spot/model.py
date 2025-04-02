@@ -18,7 +18,7 @@ from .loss import (
     loss_mse_cosine_function
 )
 
-from .utils.utils import fix_seed
+from deepspot.utils.utils import fix_seed
 
 
 class Operation(str, Enum):

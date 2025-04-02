@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(name='deepspot',
-      version='0.0.1',
+      version='1.0.0',
       description='DeepSpot:',
       author='KalinNonchev',
       author_email='boo@foo.com',
@@ -15,6 +15,6 @@ setup(name='deepspot',
       packages=find_packages(),  # find packages
       include_package_data=True,
       # external packages as dependencies,
-#      install_requires=requirements,
+      install_requires=requirements,
       python_requires='>=3.9'
       )

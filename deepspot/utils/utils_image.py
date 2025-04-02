@@ -19,7 +19,6 @@ import os
 
 from .utils_dataloader import compute_neighbors
 
-
 format_to_dtype = {
     'uchar': np.uint8,
     'char': np.int8,
@@ -32,7 +31,6 @@ format_to_dtype = {
     'complex': np.complex64,
     'dpcomplex': np.complex128,
 }
-
 
 def get_morphology_model_and_preprocess(model_name, device, model_path=None):
 
@@ -187,13 +185,13 @@ def get_low_res_image(image_path, downsample_factor):
     return image_low_res_arr
 
 
-def crop_tile(image, x_pixel, y_pixel, spot_diameter):
-    x = x_pixel - int(spot_diameter // 2)
-    y = y_pixel - int(spot_diameter // 2)
-    spot = image.crop(y, x, spot_diameter, spot_diameter)
-    main_tile = np.ndarray(buffer=spot.write_to_memory(),
-                           dtype=format_to_dtype[spot.format],
-                           shape=[spot.height, spot.width, spot.bands])
+def crop_tile(image, x_pixel, y_pixel, cell_diameter):
+    x = x_pixel - int(cell_diameter // 2)
+    y = y_pixel - int(cell_diameter // 2)
+    cell = image.crop(y, x, cell_diameter, cell_diameter)
+    main_tile = np.ndarray(buffer=cell.write_to_memory(),
+                           dtype=format_to_dtype[cell.format],
+                           shape=[cell.height, cell.width, cell.bands])
     main_tile = main_tile[:, :, :3]
     return main_tile
 
@@ -233,14 +231,12 @@ def compute_mini_tiles(image, n_tiles, super_resolution_mode=False):
 
     return squares
 
-# Detach and convert model outputs to float
-
 
 def detach_and_convert(data):
     return data[None, ].detach().float()
 
 
-def predict_spatial_transcriptomics_from_image_path(image_path,
+def predict_spot_spatial_transcriptomics_from_image_path(image_path,
                                                     adata,
                                                     spot_diameter,
                                                     n_mini_tiles,
@@ -289,6 +285,73 @@ def predict_spatial_transcriptomics_from_image_path(image_path,
                 expr = expr.detach().cpu().numpy()
                 expr = model_expression.inverse_transform(expr)
                 assert np.isnan(expr).sum() == 0, spot
+                counts.append(expr)
+    counts = np.array(counts).squeeze()
+    return counts
+
+
+
+def predict_cell_spatial_transcriptomics_from_image_path(image_path,
+                                                    adata,
+                                                    cell_diameter,
+                                                    radius_neighbors,
+                                                    preprocess,
+                                                    morphology_model,
+                                                    model_expression,
+                                                    device):
+    from sklearn.neighbors import NearestNeighbors
+    neigh = NearestNeighbors(radius=radius_neighbors)
+    neigh.fit(adata.obs[["x_pixel", "y_pixel"]].values)
+    neighbors = neigh.radius_neighbors(adata.obs[["x_pixel", "y_pixel"]].values, return_distance=True, sort_results=True)[1]
+    neighbors = [n[1:] for n in neighbors] # remove the cell itself
+
+    cell_ids = adata.obs.barcode.values
+
+    # Generate neighbors list as strings of formatted cell IDs
+    adata.obs["neighbors"] = [
+                    "___".join(f"{cell_ids[cell_id]}" for cell_id in neigh_ids)
+                    for neigh_ids in neighbors
+                ]
+
+    
+    import pyvips
+    image = pyvips.Image.new_from_file(image_path)
+    counts = []
+    # Set dtype based on the model's precision
+    with torch.autocast(device_type="cuda", dtype=torch.float16):
+        with torch.inference_mode():
+            for _, cell in tqdm(adata.obs.iterrows(), total=len(adata.obs)):
+                
+                neighbors_barcodes = cell.neighbors.split('___')
+                
+                
+                X_cell = crop_tile(image, cell.x_pixel, cell.y_pixel, cell_diameter)
+                
+                
+                X_neighbors = []
+                for _, cell_neighbor in adata.obs.query('barcode in @neighbors_barcodes').iterrows():
+                    X_neighbors.append(crop_tile(image, cell_neighbor.x_pixel, cell_neighbor.y_pixel, cell_diameter))
+
+                if len(X_neighbors) == 0:
+                    X_neighbors = np.zeros((1, *X_cell.shape))
+
+                # Preprocess inputs
+                X_cell = preprocess(X_cell).to(device).float()
+                
+                X_neighbors = torch.stack([preprocess(x).to(device) for x in X_neighbors]).to(device).float()
+
+                # Apply morphology model to each input
+                X_cell = morphology_model(X_cell[None, ])
+                X_neighbors = morphology_model(X_neighbors)
+
+                X_cell = detach_and_convert(X_cell)
+                X_neighbors = detach_and_convert(X_neighbors)
+
+                X = [X_cell, X_neighbors]
+                expr = model_expression(X)
+                expr = expr.detach().cpu().numpy()
+                expr = model_expression.inverse_transform(expr)
+                assert np.isnan(expr).sum() == 0, cell
                 counts.append(expr)
     counts = np.array(counts).squeeze()
     return counts
