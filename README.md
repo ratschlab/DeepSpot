@@ -35,11 +35,18 @@ python -m ipykernel install --user --name deepspot --display-name "deepspot"
 
 ## Getting Started
 
-Please take a look at our notebook collection to get started with DeepSpot. We provide a small toy example.
-  - [Spatial transcriptomics data preprocessing](example_notebook/GettingStartedWithDeepSpot_1_preprocessing.ipynb)
-  - [DeepSpot training](example_notebook/GettingStartedWithDeepSpot_2_training.ipynb)
-  - [DeepSpot inference](example_notebook/GettingStartedWithDeepSpot_3_inference.ipynb)
-  - [DeepSpot inference with pretrained model](example_notebook/GettingStartedWithDeepSpot_3.1_inference_pretrained_models.ipynb)
+Please take a look at our notebook collection to get started with DeepSpot for Visium or the adapted version of DeepSpot - DeepCell for Xenium. We provide a small toy examples.
+
+DeepSpot for spatial transcriptomics at **spot-level** resolution:
+  - [Spatial transcriptomics data preprocessing](example_notebook/Visium_spot_example/GettingStartedWithDeepSpot_1_preprocessing.ipynb)
+  - [DeepSpot training](example_notebook/Visium_spot_example/GettingStartedWithDeepSpot_2_training.ipynb)
+  - [DeepSpot inference](example_notebook/Visium_spot_example/GettingStartedWithDeepSpot_3_inference.ipynb)
+  - [DeepSpot inference with pretrained model](example_notebook/Visium_spot_example/GettingStartedWithDeepSpot_3.1_inference_pretrained_models.ipynb)
+
+DeepCell for spatial transcriptomics at **spot-level** resolution:
+  - [Spatial transcriptomics data preprocessing](example_notebook/Xenium_single-cell_example/GettingStartedWithDeepSpot_1_preprocessing.ipynb)
+  - [DeepCell training](example_notebook/Xenium_single-cell_example/GettingStartedWithDeepSpot_2_training.ipynb)
+  - [DeepCell inference](example_notebook/Xenium_single-cell_example/GettingStartedWithDeepSpot_3_inference.ipynb)
 
 ## Pretrained DeepSpot weights
 
