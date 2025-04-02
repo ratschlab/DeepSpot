@@ -156,7 +156,7 @@ def load_data(
         image_features_files = [
             f"{out_folder}/data/image_features/{feature_model}_{cell_diameter}/{sample}.pkl" for sample in samples]
         image_features_emb = load_multiple_pickles(image_features_files)
-        image_features_emb = emb.loc[barcode_list]
+        image_features_emb = image_features_emb.loc[barcode_list]
 
     elif load_image_features:
 

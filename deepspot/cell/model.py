@@ -124,8 +124,7 @@ class DeepCell(L.LightningModule):
         self.phi2rho_size = phi2rho_size
         self.phi_cell = nn.ModuleList([Phi(input_size, phi2rho_size, self.p_phi) for _ in range(self.n_ensemble_phi)])
         self.rho = nn.ModuleList([Rho(phi2rho_size * self._get_phi_multiplier(cell_context),
-                                 self.emb_size, self.p_rho) for _ in range(self.n_ensemble_rho)])
-        self.gene_expression = nn.Linear(emb_size, output_size)
+                                 output_size, self.p_rho) for _ in range(self.n_ensemble_rho)])
         self._forward_fn = self._get_forward_function(cell_context)
 
     def _get_phi_multiplier(self, cell_context: str) -> int:
