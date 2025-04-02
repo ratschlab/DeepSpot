@@ -48,7 +48,7 @@ def model_fine_tune(model, dataloader, rho=False, gene_expression=True, max_epoc
     trainer.fit(model, dataloader)
 
 
-def run_inference_from_dataloader(model, dataloader, device, predict_genes=True):
+def run_inference_from_dataloader(model, dataloader, device):
     model.to(device)  # same device
     model.eval()
 
@@ -60,7 +60,7 @@ def run_inference_from_dataloader(model, dataloader, device, predict_genes=True)
                 X = (x.to(device) for x in X)
             else:
                 X = X.to(device)
-            y = model.forward(X, predict_genes=predict_genes)
+            y = model.forward(X)
             # y_zeros = y_zeros.cpu().detach().numpy()
             y = y.cpu().detach().numpy()
 

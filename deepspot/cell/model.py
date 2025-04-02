@@ -40,9 +40,6 @@ class Phi(nn.Module):
             nn.Linear(input_size, output_size),
             nn.Dropout(p=p),
             nn.ReLU(inplace=True),
-            nn.Linear(output_size, output_size),
-            nn.Dropout(p=p),
-            nn.ReLU(inplace=True),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -56,12 +53,7 @@ class Rho(nn.Module):
             nn.Dropout(p=p),
             nn.ReLU(inplace=True),
             nn.Linear(input_size, output_size),
-            nn.Dropout(p=p),
-            nn.ReLU(inplace=True),
-            nn.Linear(output_size, output_size),
-            nn.Dropout(p=p),
-            nn.ReLU(inplace=True),
-            nn.Linear(output_size, output_size),
+            nn.Dropout(p=0.1),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -176,10 +168,8 @@ class DeepCell(L.LightningModule):
     def validation_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
         return self.loop_step(batch, "val")
 
-    def forward(self, x: Union[torch.Tensor, List[torch.Tensor]], predict_genes=True) -> torch.Tensor:
+    def forward(self, x: Union[torch.Tensor, List[torch.Tensor]]) -> torch.Tensor:
         x = self._forward_fn(x)
-        if predict_genes:
-            x = self.gene_expression(x)
         return x
 
     def inverse_transform(self, x) -> torch.Tensor:
