@@ -18,6 +18,7 @@ import numpy as np
 import torch
 from scipy.stats import rankdata
 
+
 class DeepCellDataLoader(Dataset):
     def __init__(self,
                  out_folder,
@@ -52,38 +53,37 @@ class DeepCellDataLoader(Dataset):
         self.scaler = scaler
         self.factor_log1p = factor_log1p
         self.resample_samples = resample_samples
-        data = load_data(samples, self.out_folder, 
-                         self.morphology_model_name, 
-                         load_image_features=False, 
+        data = load_data(samples, self.out_folder,
+                         self.morphology_model_name,
+                         load_image_features=False,
                          factor=self.factor_log1p)
 
-        
         y = data["y"][:, self.genes_to_keep]
-        
+
         transcriptomics = pd.DataFrame(y, index=data["barcode"])
-        
+
         coordinates_df = []
         for sample in tqdm(samples):
 
             adata_path = f"{out_folder}/data/h5ad/{sample}.h5ad"
             adata_obs = sc.read_h5ad(adata_path)
-            
+
             sample_idx = transcriptomics.index.to_series().apply(lambda x: x.split("_")[1] == sample)
             counts = transcriptomics[sample_idx]
             barcode = counts.index.to_series().apply(lambda x: x.split("_")[0])
             adata_train = ad.AnnData(counts.values, obs=adata_obs.obs.loc[barcode])
-            
-            
-            coordinates = adata_train.obs 
+
+            coordinates = adata_train.obs
             coordinates["barcode"] = coordinates.index.values
             coordinates["sampleID"] = sample
 
             if "neighbors" in self.cell_context:
                 neigh = NearestNeighbors(radius=self.radius_neighbors)
                 neigh.fit(coordinates[["x_pixel", "y_pixel"]].values)
-                neighbors = neigh.radius_neighbors(coordinates[["x_pixel", "y_pixel"]].values, return_distance=True, sort_results=True)[1]
-                neighbors = [n[1:32] for n in neighbors] # remove the cell itself
-                
+                neighbors = neigh.radius_neighbors(
+                    coordinates[["x_pixel", "y_pixel"]].values, return_distance=True, sort_results=True)[1]
+                neighbors = [n[1:32] for n in neighbors]  # remove the cell itself
+
                 cell_ids = coordinates.barcode.values
                 # Generate neighbors list as strings of formatted cell IDs
                 coordinates["neighbors"] = [
@@ -100,54 +100,53 @@ class DeepCellDataLoader(Dataset):
         self.coordinates_df = pd.concat(coordinates_df)
 
         assert (transcriptomics.index == self.coordinates_df.index).all()
-        
-        
+
         if self.smooth_n > 0 or self.resolution > 0:
 
             res = self.resolution if self.resolution > 0 else 1
-            
+
             resampled_idx, transcriptomics_smooth = spatial_upsample_and_smooth(
                 transcriptomics.values,
                 self.coordinates_df,
                 transcriptomics.index,
-                res, 
-                self.smooth_n, 
+                res,
+                self.smooth_n,
                 self.augmentation)
-            
+
             if self.smooth_n > 0:
                 print(f"Smoothing with n={self.smooth_n}")
                 transcriptomics[:] = transcriptomics_smooth
-                
+
             if self.resolution > 0:
                 print(f'Resampling with resolution {self.resolution}...')
                 self.old_idx = transcriptomics.index
                 transcriptomics = transcriptomics.loc[resampled_idx]
                 self.coordinates_df = self.coordinates_df.loc[resampled_idx]
                 assert (transcriptomics.index == self.coordinates_df.index).all()
-                
+
         if self.resample_samples:
             assert (transcriptomics.index == self.coordinates_df.index).all()
-            
+
             n_count = np.max(self.coordinates_df.sampleID.value_counts()).astype(int)
-            
+
             org_index = transcriptomics.index.values
             temp_idx = np.array([f"{i}+++{idx}" for i, idx in enumerate(transcriptomics.index)])
             transcriptomics.index = temp_idx
             self.coordinates_df.index = temp_idx
-            
+
             resampled_idx = get_balanced_index(temp_idx, self.coordinates_df.sampleID, n_count)
-            
+
             transcriptomics = transcriptomics.loc[resampled_idx]
             self.coordinates_df = self.coordinates_df.loc[resampled_idx]
 
             new_idx = [i.split("+++")[1] for i in transcriptomics.index]
             transcriptomics.index = new_idx
             self.coordinates_df.index = new_idx
-            
+
             assert (transcriptomics.index == self.coordinates_df.index).all()
 
         self.image_feature_source = f"{self.out_folder}/data/image_features/{self.morphology_model_name}"
-        
+
         if self.scaler is not None:
             transcriptomics.values[:] = self.scaler.transform(transcriptomics.values)
         elif self.normalize is None:
@@ -160,19 +159,20 @@ class DeepCellDataLoader(Dataset):
             transcriptomics.values[:] = self.scaler.fit_transform(transcriptomics.values)
 
         self.transcriptomics_df = transcriptomics
-        self.transcriptomics = {b:t.values for b,t in transcriptomics.iterrows()}
+        self.transcriptomics = {b: t.values for b, t in transcriptomics.iterrows()}
+
     def __len__(self):
 
         return len(self.coordinates_df)
 
     def _load_patch(self, sampleID, cell_id):
-        X = np.load(f"{self.image_feature_source}_{self.cell_diameter}/{sampleID}/{cell_id}.npy")   
+        X = np.load(f"{self.image_feature_source}_{self.cell_diameter}/{sampleID}/{cell_id}.npy")
         return X
 
     def __getitem__(self, idx):
-        
+
         cell_info = self.coordinates_df.iloc[idx]
-        
+
         X = self._load_patch(cell_info.sampleID, cell_info.barcode)
         X = X[None, :]
         if self.cell_context == 'cell':

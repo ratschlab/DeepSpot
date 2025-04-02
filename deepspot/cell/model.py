@@ -26,12 +26,12 @@ from .loss import (
 from deepspot.utils.utils import fix_seed
 
 
-
 class Operation(str, Enum):
     SUM = "sum"
     MAX = "max"
     NONE = "none"
     MEAN = "mean"
+
 
 class Phi(nn.Module):
     def __init__(self, input_size: int, output_size: int, p: float = 0.0):
@@ -67,6 +67,7 @@ class Rho(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
 
+
 class DeepCell(L.LightningModule):
     def __init__(self,
                  input_size: int,
@@ -80,18 +81,18 @@ class DeepCell(L.LightningModule):
                  n_ensemble_phi: Union[None, int] = None,
                  n_ensemble_rho: Union[None, int] = None,
                  phi2rho_size: int = 1024,
-                 emb_size:int = 1024,
+                 emb_size: int = 1024,
                  weight_decay: float = 1e-6,
                  random_seed: int = 2024,
                  agg_neighbors: str = "max",
                  scaler=None,
                  cell_context: str = 'cell_neighbors'):
         super().__init__()
-        
+
         self.save_hyperparameters()
         self.scaler = scaler
         fix_seed(random_seed)
-        
+
         if loss_func == "mse":
             self.loss_func = loss_mse_function
         elif loss_func == "cos":
@@ -113,11 +114,11 @@ class DeepCell(L.LightningModule):
         elif loss_func == "poisson":
             self.loss_func = loss_poisson_function
 
-        if agg_neighbors=="max":
+        if agg_neighbors == "max":
             self.agg_neighbors = Operation.MAX
-        elif agg_neighbors=="mean":
+        elif agg_neighbors == "mean":
             self.agg_neighbors = Operation.MEAN
-        elif agg_neighbors=="sum":
+        elif agg_neighbors == "sum":
             self.agg_neighbors = Operation.SUM
 
         self.p_phi = p_phi or p
@@ -130,7 +131,8 @@ class DeepCell(L.LightningModule):
         self.emb_size = emb_size
         self.phi2rho_size = phi2rho_size
         self.phi_cell = nn.ModuleList([Phi(input_size, phi2rho_size, self.p_phi) for _ in range(self.n_ensemble_phi)])
-        self.rho = nn.ModuleList([Rho(phi2rho_size * self._get_phi_multiplier(cell_context), self.emb_size, self.p_rho) for _ in range(self.n_ensemble_rho)])
+        self.rho = nn.ModuleList([Rho(phi2rho_size * self._get_phi_multiplier(cell_context),
+                                 self.emb_size, self.p_rho) for _ in range(self.n_ensemble_rho)])
         self.gene_expression = nn.Linear(emb_size, output_size)
         self._forward_fn = self._get_forward_function(cell_context)
 
@@ -150,14 +152,13 @@ class DeepCell(L.LightningModule):
 
     def loop_step(self, batch: Tuple[torch.Tensor, torch.Tensor], stage: str) -> torch.Tensor:
         X, y = batch
-        
+
         X = [x.float() for x in X] if isinstance(X, list) else X.float()
         y = y.float()
-        
 
         y_hat = self(X)
         loss = self.loss_func(y_hat, y)
-        
+
         self.log(stage, loss, on_epoch=True, prog_bar=True)
 
         loss_score = loss.cpu().detach().item()
@@ -197,15 +198,16 @@ class DeepCell(L.LightningModule):
         x_phi = torch.cat((x_cell, x_neighbors), dim=1)
         return self._apply_rho(x_phi)
 
-    def _apply_phi(self, x: torch.Tensor, phi_modules: nn.ModuleList, operation: Operation = Operation.NONE) -> torch.Tensor:
+    def _apply_phi(self, x: torch.Tensor, phi_modules: nn.ModuleList,
+                   operation: Operation = Operation.NONE) -> torch.Tensor:
         batch_size = x.shape[0]
         sample_size = x.shape[1]
         x = x.view(-1, self.hparams.input_size)
         x_phi = torch.stack([phi(x) for phi in phi_modules], dim=1)
         x_phi, _ = torch.median(x_phi, dim=1)
 
-        x_phi = x_phi.view(batch_size, sample_size, -1) 
-        
+        x_phi = x_phi.view(batch_size, sample_size, -1)
+
         if operation == Operation.SUM:
             x_phi = x_phi.sum(dim=1)
         elif operation == Operation.MEAN:
@@ -214,7 +216,7 @@ class DeepCell(L.LightningModule):
             x_phi, _ = x_phi.max(dim=1)
         elif operation == Operation.NONE:
             x_phi = x_phi.view(batch_size, -1)
-         
+
         return x_phi
 
     def _apply_rho(self, x_phi: torch.Tensor) -> torch.Tensor:
@@ -241,7 +243,6 @@ class DeepCell(L.LightningModule):
                 smoothed.append(alpha * point + (1 - alpha) * smoothed[-1])
         return np.array(smoothed)
 
-
     def plot_loss(self):
         """
         Plots the training and validation loss.
@@ -250,36 +251,38 @@ class DeepCell(L.LightningModule):
         """
         # Check if validation loss is present
         has_validation_loss = len(self.validation_loss) > 0
-    
+
         # Compute corresponding x-axis for validation loss, if available
         total_steps = len(self.training_loss)
-        
+
         if has_validation_loss:
-            validation_steps = np.arange(0, len(self.validation_loss)) * (len(self.training_loss) // len(self.validation_loss) + 1)
+            validation_steps = np.arange(0, len(self.validation_loss)) * \
+                (len(self.training_loss) // len(self.validation_loss) + 1)
             validation_loss_full = np.interp(range(1, total_steps + 1), validation_steps, self.validation_loss)
         else:
             validation_loss_full = np.zeros(total_steps)  # If no validation loss, use a zero array
-    
+
         # Smooth both curves
         smoothed_training_loss = self.smooth_curve(self.training_loss)
-        smoothed_validation_loss = self.smooth_curve(validation_loss_full) if has_validation_loss else np.zeros(total_steps)
-    
+        smoothed_validation_loss = self.smooth_curve(
+            validation_loss_full) if has_validation_loss else np.zeros(total_steps)
+
         # Plot original and smoothed losses
         plt.figure(figsize=(5, 4))
-        
+
         # Training loss
-        plt.plot(range(1, total_steps + 1), self.training_loss, 
+        plt.plot(range(1, total_steps + 1), self.training_loss,
                  label='Original Training Loss', color='blue', alpha=0.4, linestyle='-')
-        plt.plot(range(1, total_steps + 1), smoothed_training_loss, 
+        plt.plot(range(1, total_steps + 1), smoothed_training_loss,
                  label='Smoothed Training Loss', color='blue', linestyle='-')
-        
+
         # If validation loss is available, plot it
         if has_validation_loss:
-            plt.plot(range(1, total_steps + 1), validation_loss_full, 
+            plt.plot(range(1, total_steps + 1), validation_loss_full,
                      label='Original Validation Loss', color='orange', alpha=0.4, linestyle='--')
-            plt.plot(range(1, total_steps + 1), smoothed_validation_loss, 
+            plt.plot(range(1, total_steps + 1), smoothed_validation_loss,
                      label='Smoothed Validation Loss', color='orange', linestyle='--')
-        
+
         # Add plot details
         plt.title('Training and Validation Loss (with Smoothing)')
         plt.xlabel('Steps')

@@ -68,7 +68,8 @@ class DeepSpotDataLoader(Dataset):
 
             if "neighbors" in self.spot_context:
                 for _, spot in coordinates.iterrows():
-                    coordinates.loc[spot.name, "neighbors"] = compute_neighbors(spot, coordinates, self.radius_neighbors)
+                    coordinates.loc[spot.name, "neighbors"] = compute_neighbors(
+                        spot, coordinates, self.radius_neighbors)
                 max_n_neighbors = coordinates["neighbors"].apply(lambda x: len(x.split("___"))).max()
                 if self.max_n_neighbors < max_n_neighbors:
                     self.max_n_neighbors = max_n_neighbors
@@ -120,9 +121,8 @@ class DeepSpotDataLoader(Dataset):
 
         return len(self.coordinates_df)
 
-
     def _load_patch(self, sampleID, cell_id):
-        X = np.load(f"{self.image_feature_source}/{sampleID}/{cell_id}.npy")   
+        X = np.load(f"{self.image_feature_source}/{sampleID}/{cell_id}.npy")
         return X
 
     def __getitem__(self, idx):
@@ -148,7 +148,7 @@ class DeepSpotDataLoader(Dataset):
                 X_spot = X[indeces_spot].astype(np.float32)
 
                 X_neighbors = []
-                neighbors = [n for n in spot_info.neighbors.split("___") if n] # remove 'empty' neighbors
+                neighbors = [n for n in spot_info.neighbors.split("___") if n]  # remove 'empty' neighbors
                 for spot_neighbor_barcode in neighbors:
                     X_neighbor = self._load_patch(spot_info.sampleID, spot_neighbor_barcode)
                     X_neighbors.append(X_neighbor[indeces_spot])
@@ -165,7 +165,7 @@ class DeepSpotDataLoader(Dataset):
                 X_spot = X[indeces_spot].astype(np.float32)
 
                 X_neighbors = []
-                neighbors = [n for n in spot_info.neighbors.split("___") if n] # remove 'empty' neighbors
+                neighbors = [n for n in spot_info.neighbors.split("___") if n]  # remove 'empty' neighbors
                 for spot_neighbor_barcode in neighbors:
                     X_neighbor = self._load_patch(spot_info.sampleID, spot_neighbor_barcode)
                     X_neighbors.append(X_neighbor[indeces_spot])

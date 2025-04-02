@@ -30,10 +30,10 @@ def model_fine_tune(model, dataloader, rho=False, gene_expression=True, max_epoc
     if gene_expression:
         for param in model.gene_expression.parameters():
             param.requires_grad = True
-    
+
     # Step 2: Update the optimizer to include only the trainable parameters
     optimizer = torch.optim.AdamW(
-        filter(lambda p: p.requires_grad, model.parameters()), 
+        filter(lambda p: p.requires_grad, model.parameters()),
         lr=model.hparams.lr, weight_decay=model.hparams.weight_decay
     )
     model.eval()
@@ -46,6 +46,7 @@ def model_fine_tune(model, dataloader, rho=False, gene_expression=True, max_epoc
     # Step 3: Train the model using the fine-tuning DataLoader
     trainer = L.Trainer(max_epochs=max_epochs, logger=False, enable_checkpointing=False)
     trainer.fit(model, dataloader)
+
 
 def run_inference_from_dataloader(model, dataloader, device, predict_genes=True):
     model.to(device)  # same device
@@ -60,7 +61,7 @@ def run_inference_from_dataloader(model, dataloader, device, predict_genes=True)
             else:
                 X = X.to(device)
             y = model.forward(X, predict_genes=predict_genes)
-            #y_zeros = y_zeros.cpu().detach().numpy()
+            # y_zeros = y_zeros.cpu().detach().numpy()
             y = y.cpu().detach().numpy()
 
             out.extend(y)
@@ -83,6 +84,7 @@ def plot_loss_values(train_losses, val_losses=None):
         plt.plot(val_idx, val_losses, color="r", label="val")
 
     plt.legend()
+
 
 def fix_seed(seed):
     os.environ['PYTHONHASHSEED'] = str(seed)

@@ -1,19 +1,21 @@
 import torch
 
+
 def loss_cosine_function(y, y_hat):
     loss_cosine = (1 - torch.nn.functional.cosine_similarity(y, y_hat, dim=0)).mean()
     return loss_cosine
+
 
 def loss_pearson_function(y, y_hat, eps=1e-8):
     """
     Compute the Pearson correlation loss between true values and predicted values
     for each feature.
-    
+
     Args:
         y (torch.Tensor): True values of shape (N, D), where N is the number of samples and D is the number of features.
         y_hat (torch.Tensor): Predicted values of shape (N, D).
         eps (float): Small value to avoid division by zero.
-        
+
     Returns:
         torch.Tensor: The mean Pearson correlation loss across all features.
     """
@@ -32,16 +34,19 @@ def loss_pearson_function(y, y_hat, eps=1e-8):
     pearson_corr = covariance / (std_pred * std_true)
 
     # Return mean negative Pearson correlation as loss
-    return torch.mean(1 - pearson_corr)  # Minimize loss by maximizing 
+    return torch.mean(1 - pearson_corr)  # Minimize loss by maximizing
+
 
 def loss_mse_function(y, y_hat):
     loss_mse = torch.nn.functional.mse_loss(y, y_hat)
     return loss_mse
 
+
 def loss_l1_function(y, y_hat):
     """Calculates the L1 Loss between y and y_hat."""
     loss_l1 = torch.nn.functional.l1_loss(y, y_hat)
     return loss_l1
+
 
 def loss_huber_function(y, y_hat, delta=1.0):
     """Calculates the Huber Loss between y and y_hat.
@@ -56,6 +61,7 @@ def loss_huber_function(y, y_hat, delta=1.0):
     """
     huber_loss = torch.nn.functional.huber_loss(y, y_hat, delta=delta)
     return huber_loss
+
 
 def loss_poisson_function(y, y_hat):
     """Custom loss function for Poisson model."""
@@ -83,6 +89,7 @@ def loss_l1_cosine_function(y, y_hat):
     loss_l1 = loss_l1_function(y, y_hat)
     loss = loss_cosine + loss_l1
     return loss
+
 
 def loss_huber_cosine_function(y, y_hat):
     loss_cosine = loss_cosine_function(y, y_hat)

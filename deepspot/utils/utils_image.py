@@ -32,6 +32,7 @@ format_to_dtype = {
     'dpcomplex': np.complex128,
 }
 
+
 def get_morphology_model_and_preprocess(model_name, device, model_path=None):
 
     if model_name == "uni":
@@ -237,15 +238,15 @@ def detach_and_convert(data):
 
 
 def predict_spot_spatial_transcriptomics_from_image_path(image_path,
-                                                    adata,
-                                                    spot_diameter,
-                                                    n_mini_tiles,
-                                                    preprocess,
-                                                    morphology_model,
-                                                    model_expression,
-                                                    device,
-                                                    super_resolution=False,
-                                                    neighbor_radius=1):
+                                                         adata,
+                                                         spot_diameter,
+                                                         n_mini_tiles,
+                                                         preprocess,
+                                                         morphology_model,
+                                                         model_expression,
+                                                         device,
+                                                         super_resolution=False,
+                                                         neighbor_radius=1):
     import pyvips
     image = pyvips.Image.new_from_file(image_path)
     counts = []
@@ -290,30 +291,29 @@ def predict_spot_spatial_transcriptomics_from_image_path(image_path,
     return counts
 
 
-
 def predict_cell_spatial_transcriptomics_from_image_path(image_path,
-                                                    adata,
-                                                    cell_diameter,
-                                                    radius_neighbors,
-                                                    preprocess,
-                                                    morphology_model,
-                                                    model_expression,
-                                                    device):
+                                                         adata,
+                                                         cell_diameter,
+                                                         radius_neighbors,
+                                                         preprocess,
+                                                         morphology_model,
+                                                         model_expression,
+                                                         device):
     from sklearn.neighbors import NearestNeighbors
     neigh = NearestNeighbors(radius=radius_neighbors)
     neigh.fit(adata.obs[["x_pixel", "y_pixel"]].values)
-    neighbors = neigh.radius_neighbors(adata.obs[["x_pixel", "y_pixel"]].values, return_distance=True, sort_results=True)[1]
-    neighbors = [n[1:] for n in neighbors] # remove the cell itself
+    neighbors = neigh.radius_neighbors(adata.obs[["x_pixel", "y_pixel"]].values,
+                                       return_distance=True, sort_results=True)[1]
+    neighbors = [n[1:] for n in neighbors]  # remove the cell itself
 
     cell_ids = adata.obs.barcode.values
 
     # Generate neighbors list as strings of formatted cell IDs
     adata.obs["neighbors"] = [
-                    "___".join(f"{cell_ids[cell_id]}" for cell_id in neigh_ids)
-                    for neigh_ids in neighbors
-                ]
+        "___".join(f"{cell_ids[cell_id]}" for cell_id in neigh_ids)
+        for neigh_ids in neighbors
+    ]
 
-    
     import pyvips
     image = pyvips.Image.new_from_file(image_path)
     counts = []
@@ -321,13 +321,11 @@ def predict_cell_spatial_transcriptomics_from_image_path(image_path,
     with torch.autocast(device_type="cuda", dtype=torch.float16):
         with torch.inference_mode():
             for _, cell in tqdm(adata.obs.iterrows(), total=len(adata.obs)):
-                
+
                 neighbors_barcodes = cell.neighbors.split('___')
-                
-                
+
                 X_cell = crop_tile(image, cell.x_pixel, cell.y_pixel, cell_diameter)
-                
-                
+
                 X_neighbors = []
                 for _, cell_neighbor in adata.obs.query('barcode in @neighbors_barcodes').iterrows():
                     X_neighbors.append(crop_tile(image, cell_neighbor.x_pixel, cell_neighbor.y_pixel, cell_diameter))
@@ -337,7 +335,7 @@ def predict_cell_spatial_transcriptomics_from_image_path(image_path,
 
                 # Preprocess inputs
                 X_cell = preprocess(X_cell).to(device).float()
-                
+
                 X_neighbors = torch.stack([preprocess(x).to(device) for x in X_neighbors]).to(device).float()
 
                 # Apply morphology model to each input
