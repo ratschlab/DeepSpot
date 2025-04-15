@@ -29,12 +29,12 @@ class DeepCellDataLoader(Dataset):
                  target_sum=10000,
                  resolution=0,
                  cell_context='cell_neighbors',
-                 radius_neighbors=0,
+                 n_neighbors=0,
                  augmentation="default",
                  normalize=None,
                  scaler=None,
-                 factor_log1p=10000,
                  resample_samples=False,
+                 load_image_features_in_memory=False,
                  smooth_n=0):
         super().__init__()
         self.out_folder = out_folder
@@ -45,22 +45,27 @@ class DeepCellDataLoader(Dataset):
         self.target_sum = target_sum
         self.morphology_model_name = morphology_model_name
         self.resolution = resolution
-        self.radius_neighbors = radius_neighbors
+        self.n_neighbors = n_neighbors
         self.max_n_neighbors = 0
         self.augmentation = augmentation
         self.smooth_n = smooth_n
         self.normalize = normalize
         self.scaler = scaler
-        self.factor_log1p = factor_log1p
         self.resample_samples = resample_samples
+        self.load_image_features_in_memory = load_image_features_in_memory
         data = load_data(samples, self.out_folder,
                          self.morphology_model_name,
-                         load_image_features=False,
-                         factor=self.factor_log1p)
+                         load_image_features=self.load_image_features_in_memory,
+                         cell_diameter=self.cell_diameter,
+                         factor=self.target_sum)
 
         y = data["y"][:, self.genes_to_keep]
 
         transcriptomics = pd.DataFrame(y, index=data["barcode"])
+
+        if self.load_image_features_in_memory:
+            patches = pd.DataFrame(data["X"], index=data["barcode"])
+            self.patches = {b:e.values for b,e in patches.iterrows()}
 
         coordinates_df = []
         for sample in tqdm(samples):
@@ -78,11 +83,11 @@ class DeepCellDataLoader(Dataset):
             coordinates["sampleID"] = sample
 
             if "neighbors" in self.cell_context:
-                neigh = NearestNeighbors(radius=self.radius_neighbors)
+                neigh = NearestNeighbors(n_neighbors=self.n_neighbors)
                 neigh.fit(coordinates[["x_pixel", "y_pixel"]].values)
-                neighbors = neigh.radius_neighbors(
-                    coordinates[["x_pixel", "y_pixel"]].values, return_distance=True, sort_results=True)[1]
-                neighbors = [n[1:32] for n in neighbors]  # remove the cell itself
+                neighbors = neigh.kneighbors(
+                    coordinates[["x_pixel", "y_pixel"]].values, return_distance=True)[1]
+                neighbors = neighbors[:,1:]  # remove the cell itself
 
                 cell_ids = coordinates.barcode.values
                 # Generate neighbors list as strings of formatted cell IDs
@@ -166,7 +171,10 @@ class DeepCellDataLoader(Dataset):
         return len(self.coordinates_df)
 
     def _load_patch(self, sampleID, cell_id):
-        X = np.load(f"{self.image_feature_source}_{self.cell_diameter}/{sampleID}/{cell_id}.npy")
+        if self.load_image_features_in_memory:
+            X = self.patches[f"{cell_id}_{sampleID}"]
+        else:
+            X = np.load(f"{self.image_feature_source}_{self.cell_diameter}/{sampleID}/{cell_id}.npy")
         return X
 
     def __getitem__(self, idx):
