@@ -51,7 +51,7 @@ Please take a look at our notebook collection to get started with DeepSpot for V
 ## Pretrained DeepSpot weights
 
 Moreover, we provide pretrained weights for DeepSpot, which were generated during the training of the model in our publication and were used, for example, to generate spatial transcriptomics data for TCGA skin melanoma and kidney cancer slides. 
-Download DeepSpot weights [here](https://zenodo.org/records/14638865).
+Download DeepSpot weights [here](https://zenodo.org/records/15322099).
 
 ## Pathology foundation models
 
@@ -84,7 +84,7 @@ login(token="YOUR HUGGINGFACE TOKEN")
 ```
 # Define dataset details
 repo_id = "nonchev/TCGA_digital_spatial_transcriptomics"
-filename = "metadata_2025-01-11.csv"
+filename = "metadata_2025-01-11.csv" # please check which is the latest one
 ```
 
 ```
@@ -126,7 +126,7 @@ sq.pl.spatial_scatter(adata,
 ```
 local_dir = 'TCGA_data'  # Change the folder path as needed
 
-# Note that the full dataset is around 2TB
+# Note that the full dataset is around 7TB
 
 snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics", 
                   local_dir=local_dir,
