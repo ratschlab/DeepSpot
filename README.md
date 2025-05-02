@@ -4,7 +4,23 @@
 
 The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
 
-### Do you want to generate spatial transcriptomics data using your H&E images?
+## Changelog
+
+### NEW version (May 2025)
+  - DeepCell for spatial transcriptomics at **single-cell** resolution
+  - [new tutorials](example_notebook/)
+  - change in the module structure
+      - `from deepspot.spot import DeepSpot`
+      - `from deepspot.cell import DeepCell`
+  - [8 TB of predicted TCGA spatial transcriptomics data - LUSC, LUAD, SKCM, KIRC](https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics)
+    - 3780 samples
+    - 56 317 393 spots
+    - 4 cancer types
+  - [more DeepSpot pretrained models on Visium and Xenium data](https://zenodo.org/records/15322099)
+
+
+
+## Do you want to generate spatial transcriptomics data using your H&E images?
 
 We introduce DeepSpot, a novel deep-learning model that predicts spatial transcriptomics from H&E images. DeepSpot employs a deep-set neural network to model spots as bags of sub-spots and integrates multi-level tissue details and spatial context. This integration, supported by the robust pre-trained H&E models, significantly enhances the accuracy and granularity of gene predictions from H&E images.
 
