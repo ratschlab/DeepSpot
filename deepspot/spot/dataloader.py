@@ -1,8 +1,8 @@
 
-from .utils.utils_dataloader import spatial_upsample_and_smooth
-from .utils.utils_dataloader import compute_neighbors
-from .utils.utils_dataloader import add_zero_padding
-from .utils.utils_dataloader import load_data
+from deepspot.utils.utils_dataloader import spatial_upsample_and_smooth
+from deepspot.utils.utils_dataloader import compute_neighbors
+from deepspot.utils.utils_dataloader import add_zero_padding
+from deepspot.utils.utils_dataloader import load_data
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import RobustScaler
@@ -68,7 +68,8 @@ class DeepSpotDataLoader(Dataset):
 
             if "neighbors" in self.spot_context:
                 for _, spot in coordinates.iterrows():
-                    coordinates.loc[spot.name, "neighbors"] = compute_neighbors(spot, coordinates, self.radius_neighbors)
+                    coordinates.loc[spot.name, "neighbors"] = compute_neighbors(
+                        spot, coordinates, self.radius_neighbors)
                 max_n_neighbors = coordinates["neighbors"].apply(lambda x: len(x.split("___"))).max()
                 if self.max_n_neighbors < max_n_neighbors:
                     self.max_n_neighbors = max_n_neighbors
@@ -120,13 +121,17 @@ class DeepSpotDataLoader(Dataset):
 
         return len(self.coordinates_df)
 
+    def _load_patch(self, sampleID, cell_id):
+        X = np.load(f"{self.image_feature_source}/{sampleID}/{cell_id}.npy")
+        return X
+
     def __getitem__(self, idx):
 
         if idx not in self.cache:
 
             spot_info = self.coordinates_df.iloc[idx]
 
-            X = np.load(f"{self.image_feature_source}/{spot_info.barcode}_{spot_info.sampleID}.npy")
+            X = self._load_patch(spot_info.sampleID, spot_info.barcode)
 
             if self.spot_context == 'spot':
                 indeces_spot = np.array([0])
@@ -143,10 +148,9 @@ class DeepSpotDataLoader(Dataset):
                 X_spot = X[indeces_spot].astype(np.float32)
 
                 X_neighbors = []
-                neighbors = spot_info.neighbors.split("___")
+                neighbors = [n for n in spot_info.neighbors.split("___") if n]  # remove 'empty' neighbors
                 for spot_neighbor_barcode in neighbors:
-                    X_neighbor = np.load(
-                        f"{self.image_feature_source}/{spot_neighbor_barcode}_{spot_info.sampleID}.npy")
+                    X_neighbor = self._load_patch(spot_info.sampleID, spot_neighbor_barcode)
                     X_neighbors.append(X_neighbor[indeces_spot])
 
                 X_neighbors = np.array(X_neighbors).astype(np.float32)
@@ -161,10 +165,9 @@ class DeepSpotDataLoader(Dataset):
                 X_spot = X[indeces_spot].astype(np.float32)
 
                 X_neighbors = []
-                neighbors = spot_info.neighbors.split("___")
+                neighbors = [n for n in spot_info.neighbors.split("___") if n]  # remove 'empty' neighbors
                 for spot_neighbor_barcode in neighbors:
-                    X_neighbor = np.load(
-                        f"{self.image_feature_source}/{spot_neighbor_barcode}_{spot_info.sampleID}.npy")
+                    X_neighbor = self._load_patch(spot_info.sampleID, spot_neighbor_barcode)
                     X_neighbors.append(X_neighbor[indeces_spot])
 
                 X_neighbors = np.array(X_neighbors).astype(np.float32)
