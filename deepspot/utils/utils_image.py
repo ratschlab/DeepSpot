@@ -178,6 +178,7 @@ def get_morphology_model_and_preprocess(model_name, device, model_path=None):
 
 
 def get_low_res_image(image_path, downsample_factor):
+    import pyvips
     image = pyvips.Image.new_from_file(image_path, access='sequential')
     image_low_res = image.resize(1 / downsample_factor)
     image_low_res_arr = np.ndarray(buffer=image_low_res.write_to_memory(),
