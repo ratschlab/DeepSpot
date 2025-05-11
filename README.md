@@ -75,7 +75,7 @@ Please ensure that you download the weights for the pathology foundation models 
 
 ## TCGA spatial transcriptomics data
 
-We provide publicly the predicted spatial transcriptomics data with over 37 million spots from ~1 792 TCGA patients with melanoma or kidney cancer. You can find the data [here](https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics). Please navigate to the Hugging Face dataset card for more information.
+We provide publicly the predicted spatial transcriptomics data with over 56 million spots from 3 780 TCGA patients with melanoma or kidney cancer. You can find the data [here](https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics). Please navigate to the Hugging Face dataset card for more information.
 
 ### How to start?
 
