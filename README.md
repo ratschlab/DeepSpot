@@ -4,9 +4,13 @@
 
 The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
 
+## News
+  - [04.2025] DeepSpot secured **1st place** at the Autoimmune ML Challenge organized by the Broad Institute of MIT and Harvard and CrunchDao for predicting single-cell spatial transcriptomics from H&E images [link](https://bmi.inf.ethz.ch/news/article/kalin-nonchev-wins-autoimmune-ml-challenge).
+
 ## Changelog
 
 ### NEW version (May 2025)
+  - DeepSpot secured **1st place** at the Autoimmune ML Challenge organized by the Broad Institute of MIT and Harvard and CrunchDao for predicting single-cell spatial transcriptomics from H&E images [link](https://bmi.inf.ethz.ch/news/article/kalin-nonchev-wins-autoimmune-ml-challenge).
   - DeepCell for spatial transcriptomics at **single-cell** resolution
   - [new tutorials](example_notebook/)
   - change in the module structure
