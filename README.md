@@ -77,6 +77,10 @@ Download DeepSpot weights [here](https://zenodo.org/records/15322099).
 
 Please ensure that you download the weights for the pathology foundation models and update their file path deepspot/utils/utils_image.py. You may need to agree to specific terms and conditions before downloading.
 
+   - UNI weights https://huggingface.co/MahmoodLab/UNI
+   - Hoptimus0 weights https://huggingface.co/bioptimus/H-optimus-0
+   - Phikon weights https://huggingface.co/owkin/phikon
+
 ## TCGA spatial transcriptomics data
 
 We provide publicly the predicted spatial transcriptomics data with over 56 million spots from 3 780 TCGA patients with melanoma or kidney cancer. You can find the data [here](https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics). Please navigate to the Hugging Face dataset card for more information.
