@@ -50,16 +50,13 @@ def run_aestetik(adata, window_size=3, resolution=1.0):
     adata.obsm["X_pca_morphology"] = np.ones((len(adata), 5))  # dummy number to keep dim low
 
     resolution = float(resolution)  # leiden with resolution
-    model = AESTETIK(adata,
-                     clustering_method="leiden",
+    model = AESTETIK(clustering_method="leiden",
                      nCluster=resolution,
                      window_size=window_size,
                      morphology_weight=0)
 
-    model.prepare_input_for_model()
-    model.train()
-    model.compute_spot_representations(cluster=True, n_repeats=10)
-    adata = model.adata.copy()
+    model.fit(X=adata)
+    model.predict(X=adata, cluster=True)
     adata.obsm["latent"] = adata.obsm["AESTETIK"]
     adata.obs["label"] = adata.obs["AESTETIK_cluster"].values
     return adata
@@ -128,9 +125,8 @@ def load_multiple_pickles(files):
     return pd.concat([pd.read_pickle(f) for f in files])
 
 
-def log1p_normalization(arr, factor=10000):
-    # max_vals = arr.max(axis=1, keepdims=True)
-    return np.log1p((arr.T / np.sum(arr, axis=1)).T * factor)
+def log1p_normalization(arr, factor=10000, eps=1e-12):
+    return np.log1p(((arr.T / (np.sum(arr, axis=1) + eps)).T) * factor)
 
 
 def load_data(
