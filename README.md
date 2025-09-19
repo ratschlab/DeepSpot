@@ -5,6 +5,7 @@
 The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
 
 ## News
+  - [9.2025] DeepSpot was featured in the Eric and Wendy Schmidt Center article ["Machine Learning Teams Push the Boundaries of Virtual Spatial Biology in Global Autoimmune Disease Challenge."](https://www.ericandwendyschmidtcenter.org/updates/machine-learning-teams-push-the-boundaries-of-virtual-spatial-biology-in-global-autoimmune-disease-challenge)
   - [5.2025] Updated manuscript with new in-depth experiments and benchmarks, single-cell spatial transcriptomics prediction from H&E images, new datasets [link](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v2).
   - [04.2025] DeepSpot secured **1st place** at the Autoimmune ML Challenge organized by the Broad Institute of MIT and Harvard and CrunchDao for predicting single-cell spatial transcriptomics from H&E images [link](https://bmi.inf.ethz.ch/news/article/kalin-nonchev-wins-autoimmune-ml-challenge).
 
