@@ -5,6 +5,7 @@
 The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
 
 ## News
+  - [10.2025] [DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision](https://www.biorxiv.org/content/10.1101/2025.09.23.678121v1) at NeurIPS 2025 Imageomics.
   - [9.2025] DeepSpot was featured in the Eric and Wendy Schmidt Center article ["Machine Learning Teams Push the Boundaries of Virtual Spatial Biology in Global Autoimmune Disease Challenge."](https://www.ericandwendyschmidtcenter.org/updates/machine-learning-teams-push-the-boundaries-of-virtual-spatial-biology-in-global-autoimmune-disease-challenge)
   - [5.2025] Updated manuscript with new in-depth experiments and benchmarks, single-cell spatial transcriptomics prediction from H&E images, new datasets [link](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v2).
   - [04.2025] DeepSpot secured **1st place** at the Autoimmune ML Challenge organized by the Broad Institute of MIT and Harvard and CrunchDao for predicting single-cell spatial transcriptomics from H&E images [link](https://bmi.inf.ethz.ch/news/article/kalin-nonchev-wins-autoimmune-ml-challenge).
@@ -174,6 +175,20 @@ In case you found our work useful, please consider citing us:
   publisher={Cold Spring Harbor Laboratory Press}
 }
 ```
+
+For the DeepSpot2Cell include also:
+
+```
+@article{nonchev2025deepspot2cell,
+  title={DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H\&E images using Spot-Level Supervision},
+  author={Nonchev, Kalin and Manaiev, Glib and Koelzer, Viktor and Raetsch, Gunnar},
+  journal={bioRxiv},
+  pages={2025--09},
+  year={2025},
+  publisher={Cold Spring Harbor Laboratory}
+}
+
+``
 
 The code for reproducing the paper results can be found [here](https://github.com/ratschlab/he2st).
 
