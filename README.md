@@ -178,6 +178,7 @@ In case you found our work useful, please consider citing us:
 
 For the DeepSpot2Cell include also:
 
+
 ```
 @article{nonchev2025deepspot2cell,
   title={DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H\&E images using Spot-Level Supervision},
@@ -188,7 +189,7 @@ For the DeepSpot2Cell include also:
   publisher={Cold Spring Harbor Laboratory}
 }
 
-``
+```
 
 The code for reproducing the paper results can be found [here](https://github.com/ratschlab/he2st).
 
