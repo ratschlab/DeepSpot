@@ -72,6 +72,11 @@ Please take a look at our notebook collection to get started with DeepSpot for V
   - [DeepCell training](example_notebook/Xenium_single-cell_example/GettingStartedWithDeepCell_2_training.ipynb)
   - [DeepCell inference](example_notebook/Xenium_single-cell_example/GettingStartedWithDeepCell_3_inference.ipynb)
 
+**DeepSpot2Cell** for spot to cell resolution deconvolution:
+  - [Spatial transcriptomics data preprocessing for DeepSpot2Cell](example_notebook/Visium_to_Xenium_spot2cell_example/GettingStartedWithDeepSpot2Cell_1_preprocessing.ipynb)
+  - [DeepSpot2Cell training](example_notebook/Visium_to_Xenium_spot2cell_example/GettingStartedWithDeepSpot2Cell_2_training.ipynb)
+  - [DeepSpot2Cell inference](example_notebook/Visium_to_Xenium_spot2cell_example/GettingStartedWithDeepSpot2Cell_3_inference.ipynb)
+
 ## Pretrained DeepSpot weights
 
 Moreover, we provide pretrained weights for DeepSpot, which were generated during the training of the model in our publication and were used, for example, to generate spatial transcriptomics data for TCGA skin melanoma and kidney cancer slides. 
