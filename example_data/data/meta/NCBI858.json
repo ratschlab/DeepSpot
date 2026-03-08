@@ -1,0 +1,6 @@
+{
+    "cell_diameter": 20,
+    "sample": "NCBI858",
+    "dataset_title": "Image-based spatial transcriptomics identifies molecular niche dysregulation associated with distal lung remodeling in pulmonary fibrosis",
+    "downsample_factor": "scale_factor"
+}
