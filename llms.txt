@@ -1,0 +1,51 @@
+# DeepSpot
+
+> DeepSpot is a deep learning model that predicts spatial transcriptomics from H&E histopathology images. It uses a deep-set neural network to model spots as bags of sub-spots and integrates multi-level tissue details and spatial context using pretrained pathology foundation models.
+
+## Key Facts
+
+- Predicts gene expression from H&E-stained tissue images
+- Supports spot-level resolution (Visium) via DeepSpot and single-cell resolution (Xenium) via DeepCell
+- Won 1st place at the Autoimmune ML Challenge (Broad Institute of MIT and Harvard, 2025)
+- Provides 8 TB of predicted TCGA spatial transcriptomics data (3,780 samples, 56M+ spots, 4 cancer types)
+- Compatible with pathology foundation models: UNI, H-optimus-0, Phikon
+- MIT licensed, Python 3.9+, PyTorch-based
+
+## When to Use DeepSpot
+
+- You have H&E histopathology images and want to predict spatial gene expression without running spatial transcriptomics experiments
+- You need virtual spatial transcriptomics at spot-level (Visium) or single-cell (Xenium) resolution
+- You want to use pretrained models to generate spatial transcriptomics for large cohorts (e.g., TCGA)
+
+## Related Projects
+
+- [AESTETIK](https://github.com/ratschlab/aestetik): Autoencoder for learning multi-modal spatial transcriptomics representations (used by DeepSpot for cross-sample integration)
+- [DeepSpot2Cell](https://github.com/ratschlab/DeepSpot2Cell): Extension predicting virtual single-cell spatial transcriptomics from H&E using spot-level supervision
+
+## Links
+
+- Repository: https://github.com/ratschlab/DeepSpot
+- Preprint: https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3
+- Dataset: https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics
+- Pretrained weights: https://zenodo.org/records/15322099
+
+## Installation
+
+```
+git clone https://github.com/ratschlab/DeepSpot
+cd DeepSpot
+conda env create --file=environment.yaml
+conda activate deepspot
+python setup.py install
+```
+
+## Quick Start
+
+```python
+from deepspot.spot import DeepSpot  # spot-level (Visium)
+from deepspot.cell import DeepCell  # single-cell (Xenium)
+```
+
+## Citation
+
+Nonchev, K., Dawo, S., Silina, K., Moch, H., Andani, S., Tumor Profiler Consortium, Koelzer, V.H. and Rätsch, G. (2025). DeepSpot: Leveraging Spatial Context for Enhanced Spatial Transcriptomics Prediction from H&E Images. medRxiv. DOI: 10.1101/2025.02.09.25321567

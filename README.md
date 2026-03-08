@@ -187,6 +187,11 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 
 *This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar](https://www.semanticscholar.org/) and [OpenCitations](https://opencitations.net/) APIs.*
 
+## Related Projects
+
+- [AESTETIK](https://github.com/ratschlab/aestetik) — AutoEncoder for learning multi-modal spatial transcriptomics representations. Powers cross-sample integration in DeepSpot.
+- [DeepSpot2Cell](https://github.com/ratschlab/DeepSpot2Cell) — Predicts virtual single-cell spatial transcriptomics from H&E images using spot-level supervision. Presented at NeurIPS 2025 Imageomics.
+
 ## Citation
 
 In case you found our work useful, please consider citing us:
