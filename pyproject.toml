@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "deepspot"
+version = "1.0.0"
+description = "DeepSpot: Deep learning model for predicting spatial transcriptomics from H&E histopathology images"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    {name = "Kalin Nonchev"},
+]
+keywords = [
+    "spatial-transcriptomics",
+    "deep-learning",
+    "computational-pathology",
+    "digital-pathology",
+    "gene-expression",
+    "histopathology",
+    "visium",
+    "xenium",
+    "foundation-models",
+    "single-cell",
+    "pytorch",
+    "spatial-biology",
+    "cancer-research",
+    "bioinformatics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+
+[project.urls]
+Homepage = "https://github.com/ratschlab/DeepSpot"
+Repository = "https://github.com/ratschlab/DeepSpot"
+Documentation = "https://github.com/ratschlab/DeepSpot#getting-started"
+"Bug Tracker" = "https://github.com/ratschlab/DeepSpot/issues"
+"Preprint" = "https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3"
+"Dataset" = "https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics"
+"Pretrained Models" = "https://zenodo.org/records/15322099"

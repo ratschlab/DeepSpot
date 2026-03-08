@@ -1,8 +1,14 @@
 # DeepSpot: Leveraging Spatial Context for Enhanced Spatial Transcriptomics Prediction from H\&E Images
 
-**Authors**: Kalin Nonchev, Sebastian Dawo, Karina Selina, Holger Moch, Sonali Andani, Tumor Profiler Consortium, Viktor Hendrik Koelzer, and Gunnar Rätsch
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![medRxiv](https://img.shields.io/badge/medRxiv-2025.02.09.25321567-blue)](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3)
+[![Data on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Dataset-orange)](https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics)
+[![Pretrained Models](https://img.shields.io/badge/Zenodo-Pretrained%20Weights-blue)](https://zenodo.org/records/15322099)
 
-The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
+**Authors**: Kalin Nonchev, Sebastian Dawo, Karina Silina, Holger Moch, Sonali Andani, Tumor Profiler Consortium, Viktor Hendrik Koelzer, and Gunnar Rätsch
+
+The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3).
 
 ## News
 

@@ -1,0 +1,66 @@
+cff-version: 1.2.0
+title: "DeepSpot: Leveraging Spatial Context for Enhanced Spatial Transcriptomics Prediction from H&E Images"
+message: "If you use DeepSpot, please cite it using the metadata from this file."
+type: software
+authors:
+  - given-names: Kalin
+    family-names: Nonchev
+  - given-names: Sebastian
+    family-names: Dawo
+  - given-names: Karina
+    family-names: Silina
+  - given-names: Holger
+    family-names: Moch
+  - given-names: Sonali
+    family-names: Andani
+  - name: Tumor Profiler Consortium
+  - given-names: Viktor H.
+    family-names: Koelzer
+  - given-names: Gunnar
+    family-names: Rätsch
+repository-code: https://github.com/ratschlab/DeepSpot
+url: https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3
+license: MIT
+version: 1.0.0
+date-released: "2025-02-09"
+keywords:
+  - spatial-transcriptomics
+  - deep-learning
+  - computational-pathology
+  - digital-pathology
+  - gene-expression-prediction
+  - histopathology
+  - visium
+  - xenium
+  - foundation-models
+  - single-cell
+  - cancer-research
+  - pytorch
+  - spatial-biology
+identifiers:
+  - type: doi
+    value: 10.1101/2025.02.09.25321567
+    description: medRxiv preprint
+preferred-citation:
+  type: article
+  title: "DeepSpot: Leveraging Spatial Context for Enhanced Spatial Transcriptomics Prediction from H&E Images"
+  authors:
+    - given-names: Kalin
+      family-names: Nonchev
+    - given-names: Sebastian
+      family-names: Dawo
+    - given-names: Karina
+      family-names: Silina
+    - given-names: Holger
+      family-names: Moch
+    - given-names: Sonali
+      family-names: Andani
+    - name: Tumor Profiler Consortium
+    - given-names: Viktor H.
+      family-names: Koelzer
+    - given-names: Gunnar
+      family-names: Rätsch
+  doi: 10.1101/2025.02.09.25321567
+  url: https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3
+  journal: medRxiv
+  year: 2025
