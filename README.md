@@ -5,6 +5,8 @@
 The preprint is available [here](https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v1).
 
 ## News
+
+  - [03.2026] Cross-sample AESTETIK, the spatial transcriptomics integration model powering DeepSpot, will be presented at the [ICLR 2026 Learning Meaningful Representations of Life](https://www.biorxiv.org/content/10.64898/2026.03.02.709002v1).
   - [01.2026] Invited talk at 10x Genomics Single Cell & Spatial Discovery Symposium, 2026, Bern, Switzerland
   - [12.2025] Contributed talk at [NeurIPS 2025 Workshop on Multi-modal Foundation Models and Large Language Models for Life Sciences](https://nips2025fm4ls.github.io/), 2025, San Diego, USA
   - [10.2025] [DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision](https://www.biorxiv.org/content/10.1101/2025.09.23.678121v1) at NeurIPS 2025 Imageomics. [Code.](https://github.com/ratschlab/DeepSpot2Cell)
