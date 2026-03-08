@@ -5,6 +5,7 @@ type: software
 authors:
   - given-names: Kalin
     family-names: Nonchev
+    orcid: https://orcid.org/0009-0001-4904-8772
   - given-names: Sebastian
     family-names: Dawo
   - given-names: Karina
