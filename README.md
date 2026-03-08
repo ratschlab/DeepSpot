@@ -168,17 +168,18 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 ## Papers Citing DeepSpot
 
 <!-- CITATIONS:START -->
-- **CancerSTFormer enables multi-scale analysis of spot-resolution spatial transcriptomes and dissects gene and immune regulatory responses to targeted therapies** — Benjamin S Strope et al., bioRxiv, 2026. [Link](https://doi.org/10.64898/2025.12.22.696102)
-- **Towards Cross-Sample Alignment for Multi-Modal Representation Learning in Spatial Transcriptomics** — Justina Dai et al., bioRxiv, 2026. [Link](https://doi.org/10.64898/2026.03.02.709002)
-- **Encoding functional edges in graphs to model spatially varying relationships in the tumor microenvironment** — Ashley P. Tsang et al., npj Artificial Intelligence, 2026. [Link](https://doi.org/10.1038/s44387-026-00075-5)
-- **Beyond alignment: synergistic integration is required for multimodal cell foundation models** — Till Richter et al., bioRxiv, 2026. [Link](https://doi.org/10.64898/2026.02.23.707420)
-- **DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision** — K. Nonchev et al., bioRxiv, 2025. [Link](https://doi.org/10.1101/2025.09.23.678121)
-- **Transcriptomic Signatures in IgA Nephropathy: From Renal Tissue to Precision Risk Stratification** — C. Delrue et al., International Journal of Molecular Sciences, 2025. [Link](https://doi.org/10.3390/ijms262010055)
-- **SpatialFinder: A Human-in-the-Loop Vision-Language Framework for Prioritizing High-Value Regions in Spatial Transcriptomics** — Jonathan Xu et al., bioRxiv, 2025. [Link](https://doi.org/10.1101/2025.08.16.670684)
-- **Molecularly informed analysis of histopathology images using natural language** — Moritz Schaefer et al., bioRxiv, 2025. [Link](https://doi.org/10.1101/2025.07.14.664402)
+1. Benjamin S Strope, D. Varghese, William Z Bowie, Stacy Wang, and Qian Zhu "CancerSTFormer enables multi-scale analysis of spot-resolution spatial transcriptomes and dissects gene and immune regulatory responses to targeted therapies." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2025.12.22.696102)
+2. Justina Dai, K. Nonchev, V. Koelzer, and Gunnar Rätsch "Towards Cross-Sample Alignment for Multi-Modal Representation Learning in Spatial Transcriptomics." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.03.02.709002)
+3. Ashley P. Tsang, S. Krishnan, Reva Kulkarni, Sagnik Bhadury, M. P. di Magliano, Timothy L. Frankel, and Arvind Rao "Encoding functional edges in graphs to model spatially varying relationships in the tumor microenvironment." *npj Artificial Intelligence* (2026). [DOI](https://doi.org/10.1038/s44387-026-00075-5)
+4. Till Richter, Eric Zimmermann, J. Hall, Fabian J Theis, Srivatsan Raghavan, Peter S. Winter, Ava P. Amini, and Lorin Crawford "Beyond alignment: synergistic integration is required for multimodal cell foundation models." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.02.23.707420)
+5. K. Nonchev, Glib Manaiev, V. Koelzer, and Gunnar Rätsch "DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.09.23.678121)
+6. C. Delrue, and M. Speeckaert "Transcriptomic Signatures in IgA Nephropathy: From Renal Tissue to Precision Risk Stratification." *International Journal of Molecular Sciences* (2025). [DOI](https://doi.org/10.3390/ijms262010055)
+7. Jonathan Xu, Michelle Jiang, Shunsuke Koga, Nancy R. Zhang, and Zhi Huang "SpatialFinder: A Human-in-the-Loop Vision-Language Framework for Prioritizing High-Value Regions in Spatial Transcriptomics." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.08.16.670684)
+8. Moritz Schaefer, K. Nonchev, Animesh Awasthi, Jake Burton, V. Koelzer, Gunnar Rätsch, and Christoph Bock "Molecularly informed analysis of histopathology images using natural language." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.07.14.664402)
+9. Sushant Patkar, Timothy R. Rosean, Palak Patel, Stephanie A. Harmon, Peter L. Choyke, Tamara Jamaspishvili, and B. Turkbey "Towards interpretable molecular and spatial analysis of the tumor microenvironment from digital histopathology images with HistoTME-v2." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.06.11.658673)
 <!-- CITATIONS:END -->
 
-*This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar API](https://www.semanticscholar.org/).*
+*This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar](https://www.semanticscholar.org/) and [OpenCitations](https://opencitations.net/) APIs.*
 
 ## Citation
 
