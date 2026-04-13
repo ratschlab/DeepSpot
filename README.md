@@ -174,16 +174,7 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 ## Papers Citing DeepSpot
 
 <!-- CITATIONS:START -->
-1. Benjamin S Strope, D. Varghese, William Z Bowie, Stacy Wang, and Qian Zhu "CancerSTFormer enables multi-scale analysis of spot-resolution spatial transcriptomes and dissects gene and immune regulatory responses to targeted therapies." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2025.12.22.696102)
-2. Justina Dai, Kalin Nonchev, V. Koelzer, and Gunnar Rätsch "Towards Cross-Sample Alignment for Multi-Modal Representation Learning in Spatial Transcriptomics." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.03.02.709002)
-3. Ashley P. Tsang, S. Krishnan, Reva Kulkarni, Sagnik Bhadury, M. P. di Magliano, Timothy L. Frankel, and Arvind Rao "Encoding functional edges in graphs to model spatially varying relationships in the tumor microenvironment." *npj Artificial Intelligence* (2026). [DOI](https://doi.org/10.1038/s44387-026-00075-5)
-4. Till Richter, Eric Zimmermann, J. Hall, Fabian J Theis, Srivatsan Raghavan, Peter S. Winter, Ava P. Amini, and Lorin Crawford "Beyond alignment: synergistic integration is required for multimodal cell foundation models." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.02.23.707420)
-5. Alex Beachum, Xue Xiao, Yuansheng Zhou, Qiwei Li, Guanghua Xiao, and Lin Xu "Advances in predicting omics profiles from imaging data." *Briefings Bioinform.* (2026). [DOI](https://doi.org/10.1093/bib/bbag090)
-6. Kalin Nonchev, Glib Manaiev, V. Koelzer, and Gunnar Rätsch "DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.09.23.678121)
-7. C. Delrue, and M. Speeckaert "Transcriptomic Signatures in IgA Nephropathy: From Renal Tissue to Precision Risk Stratification." *International Journal of Molecular Sciences* (2025). [DOI](https://doi.org/10.3390/ijms262010055)
-8. Jonathan Xu, Michelle Jiang, Shunsuke Koga, Nancy R. Zhang, and Zhi Huang "SpatialFinder: A Human-in-the-Loop Vision-Language Framework for Prioritizing High-Value Regions in Spatial Transcriptomics." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.08.16.670684)
-9. Moritz Schaefer, Kalin Nonchev, Animesh Awasthi, Jake Burton, V. Koelzer, Gunnar Rätsch, and Christoph Bock "Molecularly informed analysis of histopathology images using natural language." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.07.14.664402)
-10. Sushant Patkar, Timothy R. Rosean, Palak Patel, Stephanie A. Harmon, Peter L. Choyke, Tamara Jamaspishvili, and B. Turkbey "Towards interpretable molecular and spatial analysis of the tumor microenvironment from digital histopathology images with HistoTME-v2." *bioRxiv* (2025). [DOI](https://doi.org/10.1101/2025.06.11.658673)
+No citations found yet. Check back soon!
 <!-- CITATIONS:END -->
 
 *This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar](https://www.semanticscholar.org/) and [OpenCitations](https://opencitations.net/) APIs.*
