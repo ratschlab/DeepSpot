@@ -4,6 +4,7 @@ channels:
   - conda-forge
   - pytorch
   - nvidia
+
 dependencies:
   - python==3.9
   - pip
@@ -18,16 +19,22 @@ dependencies:
   - scanpy
   - squidpy
   - matplotlib
-  - torchvision
   - pyvips
   - scikit-learn
-  - pyvips
   - lightning
   
   - pip:
-      - plotnine
-      - ipykernel
-      - huggingface_hub
-      - transformers
-      - timm
-      - scikit-misc
+    - plotnine
+    - ipykernel
+    - huggingface_hub
+    - transformers
+    - timm
+    - scikit-misc
+    - torchmetrics
+    - h5py
+    - pyyaml
+    - shapely
+    - opencv-python
+    - pillow
+    - tqdm
+    - hest

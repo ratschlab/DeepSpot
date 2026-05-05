@@ -2,7 +2,7 @@ from torchvision.models import inception_v3, Inception_V3_Weights
 from torchvision.models import resnet50, ResNet50_Weights
 from torchvision.models import densenet121, DenseNet121_Weights
 from huggingface_hub import login, hf_hub_download
-from transformers import AutoImageProcessor, ViTModel
+from transformers import AutoImageProcessor, AutoModel, ViTModel
 from collections import OrderedDict
 from torchvision import transforms
 import torch.nn.functional as F
@@ -44,7 +44,7 @@ def get_morphology_model_and_preprocess(model_name, device, model_path=None):
             init_values=1e-5,
             num_classes=0,
             dynamic_img_size=True)
-        morphology_model.load_state_dict(torch.load(model_path, map_location=device), strict=True)
+        morphology_model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True), strict=True)
         morphology_model.eval()
 
         preprocess = transforms.Compose(
@@ -65,7 +65,7 @@ def get_morphology_model_and_preprocess(model_name, device, model_path=None):
             num_classes=0,
             dynamic_img_size=True
         )
-        morphology_model.load_state_dict(torch.load(model_path, map_location=device), strict=True)
+        morphology_model.load_state_dict(torch.load(model_path, map_location=device, weights_only=True), strict=True)
         morphology_model.eval()
 
         preprocess = transforms.Compose([
@@ -124,6 +124,11 @@ def get_morphology_model_and_preprocess(model_name, device, model_path=None):
                     x = self.model(x)
                     x = x.last_hidden_state[:, 0, :]
                     return x
+                
+            def forward_features(self, x):
+                with torch.no_grad():
+                    x = self.model(x)
+                    return x.last_hidden_state
 
         preprocess = image_processor_edit
         morphology_model = MyModel(model)
@@ -354,3 +359,99 @@ def predict_cell_spatial_transcriptomics_from_image_path(image_path,
                 counts.append(expr)
     counts = np.array(counts).squeeze()
     return counts
+
+
+def predict_spot2cell_from_image_paths(cell_image_path, 
+                                     spot_image_path, 
+                                     neighbor_image_paths,
+                                     deepspot2cell_model,
+                                     morphology_model,
+                                     preprocess,
+                                     device,
+                                     gene_names=None):
+    """
+    Predict single-cell gene expression using DeepSpot2Cell from individual image paths.
+    
+    This function is designed for DeepSpot2Cell inference where you have:
+    - Individual cell image
+    - Spot image containing the cell
+    - Neighbor images from the same context
+    
+    Args:
+        cell_image_path (str): Path to the target cell image
+        spot_image_path (str): Path to the spot image containing the cell
+        neighbor_image_paths (list): List of paths to neighboring images
+        deepspot2cell_model: Trained DeepSpot2Cell model
+        morphology_model: Morphology foundation model (e.g., PhikonV2)
+        preprocess: Preprocessing function for the morphology model
+        device (str): Device to run inference on ('cuda' or 'cpu')
+        gene_names (list, optional): List of gene names for result mapping
+        
+    Returns:
+        dict: Dictionary mapping gene names/indices to predicted expression values
+    """
+    from PIL import Image
+    import os
+    
+    def extract_embedding(image_path, morphology_model, preprocess, device):
+        """Extract embedding from a single image path."""
+        image = Image.open(image_path)
+        
+        # Ensure square image
+        if image.width != image.height:
+            size = max(image.width, image.height)
+            image = image.resize((size, size))
+        
+        image_tensor = preprocess(image).to(device).unsqueeze(0)
+        
+        with torch.no_grad():
+            embedding = morphology_model(image_tensor).cpu().numpy()
+        
+        return embedding
+
+    # Extract cell embedding
+    cell_embedding = extract_embedding(cell_image_path, morphology_model, preprocess, device)
+    cell_embedding_tensor = torch.tensor(cell_embedding, device=device, dtype=torch.float32)
+    
+    # Extract spot embedding
+    spot_embedding = extract_embedding(spot_image_path, morphology_model, preprocess, device)
+    spot_embedding_tensor = torch.tensor(spot_embedding, device=device, dtype=torch.float32)
+    
+    # Extract neighbor embeddings
+    neighbor_embeddings = []
+    for neighbor_path in neighbor_image_paths:
+        if os.path.exists(neighbor_path):
+            neighbor_emb = extract_embedding(neighbor_path, morphology_model, preprocess, device)
+            neighbor_embeddings.append(torch.tensor(neighbor_emb, device=device, dtype=torch.float32))
+        else:
+            # Create zero embedding for missing neighbors
+            neighbor_embeddings.append(torch.zeros_like(spot_embedding_tensor))
+    
+    # Create context (spot + neighbors)
+    context_embeddings = [spot_embedding_tensor] + neighbor_embeddings
+    context = torch.cat(context_embeddings, dim=0)
+    
+    # Create context mask (False for valid embeddings, True for missing)
+    context_mask = [False]  # Spot is always present
+    context_mask.extend([not os.path.exists(path) for path in neighbor_image_paths])
+    context_mask = torch.tensor(context_mask, device=device)
+    
+    # Predict gene expression
+    with torch.no_grad():
+        predicted_expression = deepspot2cell_model._forward_single_cell(
+            cell_embedding_tensor,
+            context,
+            context_mask
+        )
+        predicted_expression_np = predicted_expression.cpu().numpy()
+    
+    # Format results
+    results = {}
+    if gene_names and len(gene_names) == predicted_expression_np.shape[-1]:
+        for i, gene in enumerate(gene_names):
+            results[gene] = float(predicted_expression_np[0, i])
+    else:
+        for i in range(predicted_expression_np.shape[-1]):
+            results[f"gene_{i}"] = float(predicted_expression_np[0, i])
+    
+    return results
