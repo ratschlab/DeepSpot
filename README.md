@@ -181,14 +181,14 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 2. Alice Driessen, Emil Malmsten, Steffen Wolf, Bernd Illing, Isinsu Katircioglu, Adriano Martinelli, R. Stahel, S. Peters, E. Felip, Sanjay Popat, K. Homicsko, Raphael Gottardo, Marianna Rapsomaniki, and Fei Tang "HistoTx: Early fusion of H&E images and spatial transcriptomics at varying spatial transcriptomics resolution with self-supervised learning." (2026). [DOI](https://www.semanticscholar.org/paper/c85d1044046be969a7f3a431b0afd8cc9749408a)
 3. Zi-Jun Gao, Yi-Jiang Chen, Xiang-De Luo, and Pheng-Ann Heng "CellPlex: Benchmarking Single-Cell Spatial Proteomics Prediction from H&E." (2026). [DOI](https://www.semanticscholar.org/paper/920a40bf247e53248537f1c704490a4ca9b01482)
 4. F. Giraud-Sauveur, Quentin Blampey, Pierre Marza, H. Benkirane, Maria Vakalopoulou, P. Cournède, and S. Christodoulidis "ALHENA, an H&E encoder distilled from transcriptomic foundation models for multi-scale slide analysis." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.10.20.760439)
-5. Thomas Batique, Kalin Nonchev, Viktor Hendrik Koelzer, and Gunnar Rätsch "Probabilistic uncertainty in virtual spatial transcriptomics from histology is largely redundant with the predicted mean." *bioRxiv (Cold Spring Harbor Laboratory)* (2026). [DOI](https://doi.org/10.64898/2026.10.23.760875)
+5. Thomas Batique, Kalin Nonchev, Viktor Hendrik Koelzer, and Gunnar Rätsch "Probabilistic uncertainty in virtual spatial transcriptomics from histology is largely redundant with the predicted mean." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.10.23.760875)
 6. Veronica Buttaro, Antonio Pellicani, Annalisa Occhipinti, Claudio Angione, Michelangelo Ceci, and Gianvito Pio "Leveraging Spatial Transcriptomic Through a Heterogeneous Graph-Based Method for Spot-Level Cancer Tissue Classification." *Lecture notes in computer science* (2026). [DOI](https://doi.org/10.1007/978-3-032-41086-3_48)
 7. Ulysse McConnell, K. Nonchev, V. Koelzer, and G. Rätsch "Slide-level batch structure limits histology-guided supervision of transcriptomic foundation models." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.09.30.755585)
 8. Qing Wang, Si-Pei Gu, Qi-Zhen Lan, Xiao-Qian Jiang, Yi-Jiang Chen, and Qian-Qian Song "Octave: Scale-Resolved Evaluation of Spatial Gene Expression Prediction from Histology." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.09.25.754484)
 9. Zi-Jun Gao, Chun-Bin Gu, Jin-Xi Xiang, Xiang-De Luo, and Pheng-Ann Heng "Towards Scalable Context-Aware Single-Cell Spatial Transcriptomics Prediction from Histology Images." *arXiv.org* (2026). [DOI](https://doi.org/10.48550/arXiv.2609.36429)
 10. Hyeongsub Kim, Sihyun Kim, Minyoung Cho, Sanghyun Jo, Minhyeong Lee, and Kyungsu Kim "GeneRAG: A Retrieval-Augmented Framework for Spatially Resolved Gene Expression Prediction." *Lecture notes in computer science* (2026). [DOI](https://doi.org/10.1007/978-3-032-38470-6_48)
 11. Shi-Ting Ruan, Xi-Tong Ling, Qi-Ming He, Zi-You Yan, Huai-Tian Yuan, Tian Guan, Ying Xiao, Xu Guan, and Yong-Hong He "SpaFactor: Lightweight Spatial Context-Aware Gene Program Modeling for Histology-to-Transcriptomics Inference." *arXiv.org* (2026). [DOI](https://doi.org/10.48550/arXiv.2609.28563)
-12. 葛志广, and Haoyang Cai "CUBE: Multimodal Representation Learning Reveals Biological Structure Across Histomorphology, Spatial Protein Phenotypes, and Transcriptome-Associated Signals." *bioRxiv (Cold Spring Harbor Laboratory)* (2026). [DOI](https://doi.org/10.64898/2026.09.14.751379)
+12. 葛志广, and Haoyang Cai "CUBE: Multimodal Representation Learning Reveals Biological Structure Across Histomorphology, Spatial Protein Phenotypes, and Transcriptome-Associated Signals." *bioRxiv* (2026). [DOI](https://doi.org/10.64898/2026.09.14.751379)
 13. Hyun-jong Jang, Kwangil Yim, and Sung-Hak Lee "Artificial Intelligence for Molecular Biomarker Identification in Gastrointestinal and Hepatobiliary Cancers." *International Journal of Molecular Sciences* (2026). [DOI](https://doi.org/10.3390/ijms27156969)
 14. Zi-Jun Wang, Chong-Yi Yang, Xiao-Ya Tang, En-Zhi Yin, Yu-Xin Yao, Yue-Jun Luo, Jie He, and N. Sun "Trimodal, uncertainty-guided whole-slide framework for genome-scale spatial expression and image-only virtual perturbation in cancer cohorts." *Genome Medicine* (2026). [DOI](https://doi.org/10.1186/s13073-026-01713-y)
 15. Sagnik Bhadury, Ashley P. Tsang, Dipankar Ray, K. Lagisetty, and Arvind Rao "Functional Depth Biomarkers Distinguish Lung Squamous Cell Carcinoma from Lung Adenocarcinoma." *Research Square* (2026). [DOI](https://doi.org/10.21203/rs.3.rs-9347794/v1)
@@ -209,13 +209,13 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 30. Moritz Schaefer, Zoe Piran, Nils Philipp Walter, Animesh Awasthi, Christoph Bock, J. Leskovec, and Zinaida Good "Transitive Representation Learning Enhances Histopathology Annotation.". [DOI](https://www.semanticscholar.org/paper/7a1809700fe582d9229f4926d9749a8ddbd8c17f)
 <!-- CITATIONS:END -->
 
-*This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar](https://www.semanticscholar.org/) and [OpenCitations](https://opencitations.net/) APIs.*
+*This list is automatically updated weekly via [GitHub Actions](.github/workflows/update-citations.yml) using the [Semantic Scholar](https://www.semanticscholar.org/), [OpenAlex](https://openalex.org/) and [OpenCitations](https://opencitations.net/) APIs.*
 
 ## Related Projects
 
 - [AESTETIK](https://github.com/ratschlab/aestetik) — AutoEncoder for learning multi-modal spatial transcriptomics representations. Powers cross-sample integration in DeepSpot.
 - [DeepSpot2Cell](https://github.com/ratschlab/DeepSpot2Cell) — Predicts virtual single-cell spatial transcriptomics from H&E images using spot-level supervision. Presented at NeurIPS 2025 Imageomics.
-- [DeepSpot-M](https://github.com/ratschlab/DeepSpotM) — Predicts the spatial expression of any gene from H&E images, including genes unseen during training.
+- [DeepSpot-M](https://github.com/ratschlab/DeepSpotM) — Multimodal foundation model for transcriptome-wide virtual spatial transcriptomics from H&E images. Represents genes as queryable embeddings, so it spans the protein-coding transcriptome including genes unseen during training.
 
 ## Citation
 

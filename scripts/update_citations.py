@@ -93,12 +93,14 @@ def _parse_openalex_work(work):
     """OpenAlex work object -> our record."""
     doi = _doi_of(work.get("doi") or "")
     source = (work.get("primary_location") or {}).get("source") or {}
+    # "bioRxiv (Cold Spring Harbor Laboratory)" -> "bioRxiv", as Semantic Scholar names it
+    venue = re.sub(r"\s*\((Cold Spring Harbor Laboratory|Cornell University)\)$", "", source.get("display_name") or "")
     return {
         "title": work.get("display_name") or work.get("title") or "",
         "authors": [a["author"]["display_name"] for a in work.get("authorships", [])
                     if (a.get("author") or {}).get("display_name")],
         "year": work.get("publication_year") or "",
-        "venue": source.get("display_name") or "",
+        "venue": venue,
         "link": f"https://doi.org/{doi}" if doi else work.get("id", ""),
         "date": work.get("publication_date") or "",
     }
