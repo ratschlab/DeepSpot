@@ -7,9 +7,9 @@ channels:
 dependencies:
   - python==3.9
   - pip
-  - pytorch
-  - torchvision
-  - torchaudio
+  - pytorch::pytorch=2.4.1
+  - pytorch::torchvision=0.19.1
+  - pytorch::torchaudio=2.4.1
   - pytorch-cuda=12.4
   - numpy
   - pandas
@@ -18,11 +18,11 @@ dependencies:
   - scanpy
   - squidpy
   - matplotlib
-  - torchvision
   - pyvips
   - scikit-learn
-  - pyvips
   - lightning
+  - openslide-python
+  - python-igraph
   
   - pip:
       - plotnine
@@ -31,3 +31,4 @@ dependencies:
       - transformers
       - timm
       - scikit-misc
+      - igraph>=0.10  # scanpy leiden(flavor="igraph") needs >=0.10; the conda solve with python==3.9 gives 0.9.9

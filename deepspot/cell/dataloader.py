@@ -6,7 +6,6 @@ from deepspot.utils.utils_dataloader import get_balanced_index
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import RobustScaler
-from distutils.dir_util import copy_tree
 from torch.utils.data import Dataset
 from collections import Counter
 

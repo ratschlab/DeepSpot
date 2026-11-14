@@ -3,7 +3,8 @@ from torchvision.models import resnet50, ResNet50_Weights
 from torchvision.models import densenet121, DenseNet121_Weights
 from huggingface_hub import login, hf_hub_download
 from transformers import AutoImageProcessor, ViTModel
-from collections import OrderedDict
+from collections import OrderedDict, deque
+from concurrent.futures import ThreadPoolExecutor
 from torchvision import transforms
 import torch.nn.functional as F
 from tqdm import tqdm
@@ -11,13 +12,17 @@ import pandas as pd
 import scanpy as sc
 import numpy as np
 import torch
+import numbers
 import json
 import timm
 import glob
+import math
 import sys
 import os
+import threading
 
 from .utils_dataloader import compute_neighbors
+from .utils_dataloader import compute_spatial_neighbors
 
 format_to_dtype = {
     'uchar': np.uint8,
@@ -238,6 +243,155 @@ def detach_and_convert(data):
     return data[None, ].detach().float()
 
 
+# Tiles per morphology-model forward pass: on the GPU 32 spots x (1 + 9 mini
+# tiles), as in the per-spot feature extractor; on the CPU large batches run
+# slower than small ones.
+PREDICT_BATCH_TILES = 320
+PREDICT_BATCH_TILES_CPU = 16
+
+
+def predict_batch_tiles(device):
+    return PREDICT_BATCH_TILES if torch.device(device).type == "cuda" else PREDICT_BATCH_TILES_CPU
+
+
+class SpotTileDataset(torch.utils.data.Dataset):
+    """Preprocessed tiles of one spot per item, cropped in :func:`tile_loader`'s threads.
+
+    Item ``i`` stacks ``preprocess`` of the tile of spot ``i`` (``tiles="spot"``)
+    or of its mini tiles as ``compute_mini_tiles`` cuts them
+    (``tiles="subspot"``), as float32 (n_tiles, C, H, W). With
+    ``zero_tile_of=j`` one extra last item holds the zero image that stands in
+    for the neighbours of a spot that has none, shaped like the tile of spot
+    ``j``. The slide is opened once, on first use; its threads share it.
+    """
+
+    def __init__(self, image_path, x_pixel, y_pixel, diameter, preprocess, tiles="spot",
+                 n_mini_tiles=None, super_resolution=False, zero_tile_of=None):
+        self.image_path = image_path
+        self.x_pixel = x_pixel
+        self.y_pixel = y_pixel
+        self.diameter = diameter
+        self.preprocess = preprocess
+        self.tiles = tiles
+        self.n_mini_tiles = n_mini_tiles
+        self.super_resolution = super_resolution
+        self.zero_tile_of = zero_tile_of
+        self.image = None
+        self._open_lock = threading.Lock()
+
+    def __len__(self):
+        return len(self.x_pixel) + (self.zero_tile_of is not None)
+
+    def __getitem__(self, i):
+        if self.image is None:
+            with self._open_lock:
+                if self.image is None:
+                    import pyvips
+                    self.image = pyvips.Image.new_from_file(self.image_path)
+        j = self.zero_tile_of if i == len(self.x_pixel) else i
+        tile = crop_tile(self.image, self.x_pixel[j], self.y_pixel[j], self.diameter)
+        if j != i:
+            tiles = np.zeros((1, *tile.shape))
+        elif self.tiles == "spot":
+            tiles = [tile]
+        else:
+            tiles = compute_mini_tiles(tile, self.n_mini_tiles, self.super_resolution)
+        return torch.stack([self.preprocess(t) for t in tiles]).float()
+
+
+class _ThreadedBatches:
+    """Ordered batches (``torch.stack`` of the items) of ``dataset``, read one batch ahead."""
+
+    def __init__(self, dataset, batch_size, n_threads, pin_memory):
+        self.dataset = dataset
+        self.batch_size = batch_size
+        self.n_threads = n_threads
+        self.pin_memory = pin_memory
+
+    def __len__(self):
+        return math.ceil(len(self.dataset) / self.batch_size)
+
+    def __iter__(self):
+        n = len(self.dataset)
+        with ThreadPoolExecutor(self.n_threads) as pool:
+            pending, submitted = deque(), 0
+            for start in range(0, n, self.batch_size):
+                stop = min(start + self.batch_size, n)
+                while submitted < min(stop + self.batch_size, n):
+                    pending.append(pool.submit(self.dataset.__getitem__, submitted))
+                    submitted += 1
+                X = torch.stack([pending.popleft().result() for _ in range(start, stop)])
+                yield X.pin_memory() if self.pin_memory else X
+
+
+def tile_loader(dataset, batch_size, device):
+    """Ordered batches of ``dataset`` like a DataLoader's, read by one thread per CPU of the job.
+
+    Threads, not DataLoader worker processes: a forked worker deadlocks once the
+    caller has used libvips (e.g. a notebook that opened the slide with pyvips),
+    and spawned workers would re-run a calling script that has no ``__main__``
+    guard. libvips and torch release the GIL while they crop and preprocess.
+    """
+    n_cpus = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else (os.cpu_count() or 1)
+    return _ThreadedBatches(dataset, batch_size, n_cpus, pin_memory=torch.device(device).type == "cuda")
+
+
+def spot_neighbor_positions(obs, radius=1):
+    """Positions in ``obs`` of the neighbours of every spot, in ``obs`` order.
+
+    The spots that ``compute_neighbors(spot, obs, radius)`` followed by
+    ``obs.query('barcode in @neighbors_barcodes')`` select: same ``sampleID``,
+    within ``radius`` steps in both ``x_array`` and ``y_array``, the spot
+    itself excluded. Integer array coordinates and unique plain-string
+    barcodes (Visium and TCGA spots) are matched on a grid lookup; anything
+    else runs that per-spot query.
+    """
+    sample_ids = obs["sampleID"].tolist()
+    barcodes = obs["barcode"].tolist()
+    plain = [s for s in sample_ids + barcodes if isinstance(s, str) and "'" not in s and "\\" not in s]
+    integer_grid = all(isinstance(obs[c].dtype, np.dtype) and obs[c].dtype.kind in "iu"
+                       for c in ("x_array", "y_array"))
+    grid = (integer_grid and isinstance(radius, numbers.Real) and math.isfinite(radius) and radius < 64
+            and len(plain) == 2 * len(obs) and len(set(barcodes)) == len(obs)
+            and not any("___" in b for b in barcodes))
+    if not grid:
+        positions = []
+        for _, spot in obs.iterrows():
+            neighbors_barcodes = compute_neighbors(spot, obs, radius=radius).split('___')
+            positions.append(np.flatnonzero(obs["barcode"].isin(neighbors_barcodes).to_numpy()))
+        return positions
+
+    r = math.floor(radius)
+    offsets = [(dx, dy) for dx in range(-r, r + 1) for dy in range(-r, r + 1)]
+    keys = list(zip(sample_ids, obs["x_array"].tolist(), obs["y_array"].tolist()))
+    spots_at = {}
+    for i, key in enumerate(keys):
+        spots_at.setdefault(key, []).append(i)
+    positions = []
+    for i, (sample_id, x, y) in enumerate(keys):
+        found = [j for dx, dy in offsets for j in spots_at.get((sample_id, x + dx, y + dy), ()) if j != i]
+        positions.append(np.array(sorted(found), dtype=np.int64))
+    return positions
+
+
+def model_neighbor_positions(obs, model_expression, radius=1):
+    """Neighbour positions of every spot, defined as for the model's training data.
+
+    Models trained with ``neighbor_method="spatial"`` (DeepSpot.neighbor_method)
+    use :func:`compute_spatial_neighbors` per sample; older models (no attribute)
+    the array-coordinate window of :func:`spot_neighbor_positions`.
+    """
+    if getattr(model_expression, "neighbor_method", "array") != "spatial":
+        return spot_neighbor_positions(obs, radius=radius)
+    position = {(s, b): i for i, (s, b) in enumerate(zip(obs["sampleID"], obs["barcode"].astype(str)))}
+    positions = [None] * len(obs)
+    for sample_id, rows in obs.groupby("sampleID", sort=False).indices.items():
+        sub = obs.iloc[rows]
+        for i, near in zip(rows, compute_spatial_neighbors(sub, radius=radius)):
+            positions[i] = np.array([position[(sample_id, b)] for b in near.split("___") if b], dtype=np.int64)
+    return positions
+
+
 def predict_spot_spatial_transcriptomics_from_image_path(image_path,
                                                          adata,
                                                          spot_diameter,
@@ -247,48 +401,102 @@ def predict_spot_spatial_transcriptomics_from_image_path(image_path,
                                                          model_expression,
                                                          device,
                                                          super_resolution=False,
+                                                         return_std=False,
                                                          neighbor_radius=1):
-    import pyvips
-    image = pyvips.Image.new_from_file(image_path)
-    counts = []
-    # Set dtype based on the model's precision
+    """Predict the expression of every spot of ``adata`` from the slide image.
+
+    ``model_expression`` gets, per spot, the embeddings of the spot tile, of its
+    mini tiles and of the tiles of its neighbours (within ``neighbor_radius``,
+    defined as in the model's training data, see :func:`model_neighbor_positions`;
+    a spot without neighbours gets an all-zero row if the model masks padding,
+    else the embedding of a zero image). Each tile is embedded
+    once, in batches of ``predict_batch_tiles(device)``, with crops and preprocessing in
+    :func:`tile_loader`'s threads: first all spot tiles (a neighbour's embedding is the
+    embedding of that spot), then the mini tiles, each batch of which goes
+    through ``model_expression`` grouped by neighbour count.
+
+    Returns the inverse-transformed ``counts`` (spots x genes) and, if
+    ``return_std``, the ensemble std as the model outputs it. Equal to the
+    former per-spot loop up to floating-point rounding.
+    """
+    obs = adata.obs
+    n_spots = len(obs)
+    if n_spots == 0:
+        counts = np.array([]).squeeze()
+        return (counts, np.array([]).squeeze()) if return_std else counts
+
+    x_pixel, y_pixel = obs["x_pixel"].tolist(), obs["y_pixel"].tolist()
+    neighbors = model_neighbor_positions(obs, model_expression, radius=neighbor_radius)
+    # A model that masks neighbour padding gets an all-zero neighbour row for a spot
+    # without neighbours (it then uses the spot's own embedding, as in training);
+    # older models get the embedding of a zero image, as before.
+    masks_padding = getattr(model_expression, "mask_padded_neighbors", False)
+    isolated = [] if masks_padding else [i for i, positions in enumerate(neighbors) if len(positions) == 0]
+    n_subspot_tiles = 1 if super_resolution else int(np.sqrt(n_mini_tiles)) ** 2
+    batch_tiles = predict_batch_tiles(device)
+
+    counts = std_counts = None
     with torch.autocast(device_type="cuda", dtype=torch.float16):
         with torch.inference_mode():
-            for _, spot in tqdm(adata.obs.iterrows(), total=len(adata.obs)):
-                neighbors_barcodes = compute_neighbors(spot, adata.obs, radius=neighbor_radius)  # "__".join(barcodes)
-                neighbors_barcodes = neighbors_barcodes.split('___')
+            # Spot tiles, plus the zero image last if any spot has no neighbours.
+            spot_tiles = SpotTileDataset(image_path, x_pixel, y_pixel, spot_diameter, preprocess, tiles="spot",
+                                         zero_tile_of=isolated[0] if isolated else None)
+            spot_features = []
+            for X in tqdm(tile_loader(spot_tiles, batch_tiles, device), desc="spot tiles"):
+                X = morphology_model(X.to(device, non_blocking=True).flatten(0, 1))
+                spot_features.append(X.detach().float().cpu())
+            spot_features = torch.cat(spot_features)
+            zero_features = spot_features[n_spots:]
+            spot_features = spot_features[:n_spots]
 
-                X_spot = crop_tile(image, spot.x_pixel, spot.y_pixel, spot_diameter)
-                X_subspot = compute_mini_tiles(X_spot, n_mini_tiles, super_resolution)
-                # X_subspot = np.array(X_subspot).swapaxes(1,3)
-                X_neighbors = []
-                for _, spot_neighbor in adata.obs.query('barcode in @neighbors_barcodes').iterrows():
-                    X_neighbors.append(crop_tile(image, spot_neighbor.x_pixel, spot_neighbor.y_pixel, spot_diameter))
+            # Mini tiles, then the expression model on the assembled inputs.
+            subspot_tiles = SpotTileDataset(image_path, x_pixel, y_pixel, spot_diameter, preprocess,
+                                            tiles="subspot", n_mini_tiles=n_mini_tiles,
+                                            super_resolution=super_resolution)
+            batch_spots = max(1, batch_tiles // n_subspot_tiles)
+            start = 0
+            for X in tqdm(tile_loader(subspot_tiles, batch_spots, device), desc="mini tiles"):
+                b, t = X.shape[:2]
+                X_subspot = morphology_model(X.to(device, non_blocking=True).flatten(0, 1))
+                X_subspot = X_subspot.detach().float().reshape(b, t, -1)
 
-                if len(X_neighbors) == 0:
-                    X_neighbors = np.zeros((1, *X_spot.shape))
+                by_n_neighbors = {}
+                for k in range(b):
+                    by_n_neighbors.setdefault(len(neighbors[start + k]), []).append(k)
+                for n_neighbors, members in by_n_neighbors.items():
+                    spots = [start + k for k in members]
+                    if n_neighbors:
+                        X_neighbors = spot_features[torch.from_numpy(np.stack([neighbors[i] for i in spots]))]
+                    elif masks_padding:
+                        X_neighbors = torch.zeros(len(spots), 1, spot_features.shape[1])
+                    else:
+                        X_neighbors = zero_features.expand(len(spots), -1)[:, None]
+                    X = [spot_features[spots][:, None].to(device), X_subspot[members], X_neighbors.to(device)]
+                    if return_std:
+                        expr, std_expr = model_expression(X, return_std=return_std)
+                        std_expr = std_expr.detach().cpu().numpy()
+                        if std_counts is None:
+                            std_counts = np.empty((n_spots, *std_expr.shape[1:]), dtype=std_expr.dtype)
+                        std_counts[spots] = std_expr
+                    else:
+                        expr = model_expression(X)
 
-                # Preprocess inputs
-                X_spot = preprocess(X_spot).to(device).float()
-                X_subspot = torch.stack([preprocess(x) for x in X_subspot]).to(device).float()
-                X_neighbors = torch.stack([preprocess(x).to(device) for x in X_neighbors]).to(device).float()
+                    expr = expr.detach().cpu().numpy()
+                    expr = model_expression.inverse_transform(expr)
+                    if counts is None:
+                        counts = np.empty((n_spots, *expr.shape[1:]), dtype=expr.dtype)
+                    counts[spots] = expr
 
-                # Apply morphology model to each input
-                X_spot = morphology_model(X_spot[None, ])
-                X_subspot = morphology_model(X_subspot)
-                X_neighbors = morphology_model(X_neighbors)
+                has_nan = np.isnan(counts[start:start + b]).reshape(b, -1).any(axis=1)
+                assert not has_nan.any(), obs.iloc[start + int(np.argmax(has_nan))]
+                start += b
+    # (spots, 1, genes) squeezed, as np.array() of the per-spot (1, genes) outputs was.
+    counts = np.expand_dims(counts, 1).squeeze()
 
-                X_spot = detach_and_convert(X_spot)
-                X_subspot = detach_and_convert(X_subspot)
-                X_neighbors = detach_and_convert(X_neighbors)
+    if return_std:
+        std_counts = np.expand_dims(std_counts, 1).squeeze()
+        return counts, std_counts
 
-                X = [X_spot, X_subspot, X_neighbors]
-                expr = model_expression(X)
-                expr = expr.detach().cpu().numpy()
-                expr = model_expression.inverse_transform(expr)
-                assert np.isnan(expr).sum() == 0, spot
-                counts.append(expr)
-    counts = np.array(counts).squeeze()
     return counts
 
 

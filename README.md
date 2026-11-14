@@ -55,7 +55,7 @@ git clone https://github.com/ratschlab/DeepSpot
 cd DeepSpot
 conda env create --file=environment.yaml
 conda activate deepspot
-python setup.py install
+pip install .
 ```
 
 ##### NB: Please ensure you have installed [pyvips](https://github.com/libvips/pyvips) depending on your machine's requirements. We suggest installing pyvips through conda:
@@ -209,6 +209,7 @@ snapshot_download("nonchev/TCGA_digital_spatial_transcriptomics",
 
 - [AESTETIK](https://github.com/ratschlab/aestetik) — AutoEncoder for learning multi-modal spatial transcriptomics representations. Powers cross-sample integration in DeepSpot.
 - [DeepSpot2Cell](https://github.com/ratschlab/DeepSpot2Cell) — Predicts virtual single-cell spatial transcriptomics from H&E images using spot-level supervision. Presented at NeurIPS 2025 Imageomics.
+- [DeepSpot-M](https://github.com/ratschlab/DeepSpotM) — Predicts the spatial expression of any gene from H&E images, including genes unseen during training.
 
 ## Citation
 

@@ -71,11 +71,22 @@ class DeepSpot(L.LightningModule):
                  weight_decay: float = 1e-6,
                  random_seed: int = 2024,
                  scaler=None,
-                 spot_context: str = 'spot_subspot_neighbors'):
+                 spot_context: str = 'spot_subspot_neighbors',
+                 mask_padded_neighbors: bool = True,
+                 neighbor_method: str = "spatial"):
         super().__init__()
 
         self.save_hyperparameters()
         self.scaler = scaler
+        # True: neighbour max-pooling ignores the zero rows that pad every spot to
+        # max_n_neighbors, and a spot without neighbours uses its own embedding as
+        # its neighbourhood (without it, padding enters the max as phi(0) = ReLU(bias),
+        # which training sees and inference does not). Models pickled before this
+        # option lack the attribute and keep the old behaviour (see _mask_neighbors).
+        self.mask_padded_neighbors = mask_padded_neighbors
+        # How the training data defined neighbours (DeepSpotDataLoader.neighbor_method),
+        # so that prediction can use the same definition.
+        self.neighbor_method = neighbor_method
         fix_seed(random_seed)
 
         if loss_func == "mse":
@@ -151,8 +162,8 @@ class DeepSpot(L.LightningModule):
     def validation_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> torch.Tensor:
         return self.loop_step(batch, "val")
 
-    def forward(self, x: Union[torch.Tensor, List[torch.Tensor]]) -> torch.Tensor:
-        x = self._forward_fn(x)
+    def forward(self, x: Union[torch.Tensor, List[torch.Tensor]], return_std=False) -> torch.Tensor:
+        x = self._forward_fn(x, return_std=return_std)
         return x
 
     def inverse_transform(self, x) -> torch.Tensor:
@@ -160,31 +171,50 @@ class DeepSpot(L.LightningModule):
             x = self.scaler.inverse_transform(x)
         return x
 
-    def _forward_spot(self, x: torch.Tensor) -> torch.Tensor:
+    def _forward_spot(self, x: torch.Tensor, return_std=False) -> torch.Tensor:
         x_phi = self._apply_phi(x, self.phi_spot, operation=Operation.SUM)
-        return self._apply_rho(x_phi)
+        return self._apply_rho(x_phi, return_std=return_std)
 
-    def _forward_spot_subspot(self, x: List[torch.Tensor]) -> torch.Tensor:
+    def _forward_spot_subspot(self, x: List[torch.Tensor], return_std=False) -> torch.Tensor:
         x_spot, x_subspot = x
         x_subspot = self._apply_phi(x_subspot, self.phi_spot, operation=Operation.SUM)
         x_spot = self._apply_phi(x_spot, self.phi_spot)
         x_phi = torch.cat((x_spot, x_subspot), dim=1)
-        return self._apply_rho(x_phi)
+        return self._apply_rho(x_phi, return_std=return_std)
 
-    def _forward_spot_neighbors(self, x: List[torch.Tensor]) -> torch.Tensor:
+    def _forward_spot_neighbors(self, x: List[torch.Tensor], return_std=False) -> torch.Tensor:
         x_spot, x_neighbors = x
         x_spot = self._apply_phi(x_spot, self.phi_spot)
-        x_neighbors = self._apply_phi(x_neighbors, self.phi_spot, operation=Operation.MAX)
+        x_neighbors = self._pool_neighbors(x_neighbors, x_spot)
         x_phi = torch.cat((x_spot, x_neighbors), dim=1)
-        return self._apply_rho(x_phi)
+        return self._apply_rho(x_phi, return_std=return_std)
 
-    def _forward_spot_subspot_neighbors(self, x: List[torch.Tensor]) -> torch.Tensor:
+    def _forward_spot_subspot_neighbors(self, x: List[torch.Tensor], return_std=False) -> torch.Tensor:
         x_spot, x_subspot, x_neighbors = x
         x_subspot = self._apply_phi(x_subspot, self.phi_spot, operation=Operation.SUM)
         x_spot = self._apply_phi(x_spot, self.phi_spot)
-        x_neighbors = self._apply_phi(x_neighbors, self.phi_spot, operation=Operation.MAX)
+        x_neighbors = self._pool_neighbors(x_neighbors, x_spot)
         x_phi = torch.cat((x_spot, x_subspot, x_neighbors), dim=1)
-        return self._apply_rho(x_phi)
+        return self._apply_rho(x_phi, return_std=return_std)
+
+    @property
+    def _mask_neighbors(self) -> bool:
+        return getattr(self, "mask_padded_neighbors", False)
+
+    def _pool_neighbors(self, x_neighbors: torch.Tensor, x_spot_phi: torch.Tensor) -> torch.Tensor:
+        """Max-pool the neighbour embeddings (batch x max_n_neighbors x features).
+
+        Padding rows are all-zero feature vectors. With mask_padded_neighbors they
+        are left out of the max (phi >= 0 after its ReLU, so zeroing them is
+        exact), and a spot with no neighbour falls back to its own embedding.
+        """
+        if not self._mask_neighbors:
+            return self._apply_phi(x_neighbors, self.phi_spot, operation=Operation.MAX)
+        valid = x_neighbors.abs().amax(dim=-1) > 0
+        x_phi = self._apply_phi(x_neighbors, self.phi_spot, operation=Operation.NONE)
+        x_phi = x_phi.view(x_neighbors.shape[0], x_neighbors.shape[1], -1) * valid.unsqueeze(-1)
+        pooled, _ = x_phi.max(dim=1)
+        return torch.where(valid.any(dim=1, keepdim=True), pooled, x_spot_phi)
 
     def _apply_phi(self, x: torch.Tensor, phi_modules: nn.ModuleList,
                    operation: Operation = Operation.NONE) -> torch.Tensor:
@@ -207,10 +237,11 @@ class DeepSpot(L.LightningModule):
 
         return x_phi
 
-    def _apply_rho(self, x_phi: torch.Tensor) -> torch.Tensor:
+    def _apply_rho(self, x_phi: torch.Tensor, return_std=False) -> torch.Tensor:
         x_rho = torch.stack([rho(x_phi) for rho in self.rho], dim=1)
-        x_rho = torch.mean(x_rho, dim=1)
-        return x_rho
+        if return_std:
+            return torch.mean(x_rho, dim=1), torch.std(x_rho, dim=1)
+        return torch.mean(x_rho, dim=1)
 
     def configure_optimizers(self) -> dict:
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams.lr, weight_decay=self.hparams.weight_decay)

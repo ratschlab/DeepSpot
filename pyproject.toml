@@ -1,14 +1,34 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=77"]  # license = "MIT" (PEP 639 expression) needs >= 77
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "deepspot"
-version = "1.0.0"
+version = "1.1.0"
 description = "DeepSpot: Deep learning model for predicting spatial transcriptomics from H&E histopathology images"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
+# Runtime dependencies (lower bounds only where the code needs them); the pinned, tested environment is environment.yaml.
+dependencies = [
+    "torch>=2.0",
+    "torchvision",
+    "lightning>=2.0",
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "anndata",
+    "h5py",
+    "scanpy>=1.10",      # leiden(flavor="igraph")
+    "igraph>=0.10",      # needed by scanpy's igraph flavor
+    "matplotlib",
+    "tqdm",
+    "timm",
+    "transformers",
+    "huggingface_hub",
+    "pyvips",            # needs libvips; conda install conda-forge::pyvips brings both
+]
 authors = [
     {name = "Kalin Nonchev"},
 ]
@@ -31,7 +51,6 @@ keywords = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -41,6 +60,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
 
+[project.optional-dependencies]
+aestetik = ["aestetik"]   # augmentation="aestetik"
+
 [project.urls]
 Homepage = "https://github.com/ratschlab/DeepSpot"
 Repository = "https://github.com/ratschlab/DeepSpot"
@@ -49,3 +71,6 @@ Documentation = "https://github.com/ratschlab/DeepSpot#getting-started"
 "Preprint" = "https://www.medrxiv.org/content/10.1101/2025.02.09.25321567v3"
 "Dataset" = "https://huggingface.co/datasets/nonchev/TCGA_digital_spatial_transcriptomics"
 "Pretrained Models" = "https://zenodo.org/records/15322099"
+
+[tool.setuptools.packages.find]
+include = ["deepspot*"]

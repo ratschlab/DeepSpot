@@ -21,6 +21,7 @@
 
 - [AESTETIK](https://github.com/ratschlab/aestetik): Autoencoder for learning multi-modal spatial transcriptomics representations (used by DeepSpot for cross-sample integration)
 - [DeepSpot2Cell](https://github.com/ratschlab/DeepSpot2Cell): Extension predicting virtual single-cell spatial transcriptomics from H&E using spot-level supervision
+- [DeepSpot-M](https://github.com/ratschlab/DeepSpotM): Predicts the spatial expression of any gene from H&E images, including genes unseen during training
 
 ## Links
 
@@ -36,7 +37,7 @@ git clone https://github.com/ratschlab/DeepSpot
 cd DeepSpot
 conda env create --file=environment.yaml
 conda activate deepspot
-python setup.py install
+pip install .
 ```
 
 ## Quick Start
