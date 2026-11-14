@@ -1,0 +1,242 @@
+[
+  {
+    "title": "Multimodal cell foundation models require synergistic integration beyond alignment",
+    "authors": "Till Richter, Eric Zimmermann, James Hall, Fabian Joachim Theis, Srivatsan Raghavan, Peter S. Winter, Ava P. Amini, and Lorin A. Crawford",
+    "venue": "Nature Machine Intelligence",
+    "year": 2026,
+    "link": "https://doi.org/10.1038/s42256-026-01328-3",
+    "date": "2026-11-09"
+  },
+  {
+    "title": "HistoTx: Early fusion of H&E images and spatial transcriptomics at varying spatial transcriptomics resolution with self-supervised learning",
+    "authors": "Alice Driessen, Emil Malmsten, Steffen Wolf, Bernd Illing, Isinsu Katircioglu, Adriano Martinelli, R. Stahel, S. Peters, E. Felip, Sanjay Popat, K. Homicsko, Raphael Gottardo, Marianna Rapsomaniki, and Fei Tang",
+    "venue": "",
+    "year": 2026,
+    "link": "https://www.semanticscholar.org/paper/c85d1044046be969a7f3a431b0afd8cc9749408a",
+    "date": "2026-11-02"
+  },
+  {
+    "title": "CellPlex: Benchmarking Single-Cell Spatial Proteomics Prediction from H&E",
+    "authors": "Zi-Jun Gao, Yi-Jiang Chen, Xiang-De Luo, and Pheng-Ann Heng",
+    "venue": "",
+    "year": 2026,
+    "link": "https://www.semanticscholar.org/paper/920a40bf247e53248537f1c704490a4ca9b01482",
+    "date": "2026-11-02"
+  },
+  {
+    "title": "ALHENA, an H&E encoder distilled from transcriptomic foundation models for multi-scale slide analysis",
+    "authors": "F. Giraud-Sauveur, Quentin Blampey, Pierre Marza, H. Benkirane, Maria Vakalopoulou, P. Cournède, and S. Christodoulidis",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.10.20.760439",
+    "date": "2026-10-25"
+  },
+  {
+    "title": "Probabilistic uncertainty in virtual spatial transcriptomics from histology is largely redundant with the predicted mean",
+    "authors": "Thomas Batique, Kalin Nonchev, Viktor Hendrik Koelzer, and Gunnar Rätsch",
+    "venue": "bioRxiv (Cold Spring Harbor Laboratory)",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.10.23.760875",
+    "date": "2026-10-24"
+  },
+  {
+    "title": "Leveraging Spatial Transcriptomic Through a Heterogeneous Graph-Based Method for Spot-Level Cancer Tissue Classification",
+    "authors": "Veronica Buttaro, Antonio Pellicani, Annalisa Occhipinti, Claudio Angione, Michelangelo Ceci, and Gianvito Pio",
+    "venue": "Lecture notes in computer science",
+    "year": 2026,
+    "link": "https://doi.org/10.1007/978-3-032-41086-3_48",
+    "date": "2026-10-17"
+  },
+  {
+    "title": "Slide-level batch structure limits histology-guided supervision of transcriptomic foundation models",
+    "authors": "Ulysse McConnell, K. Nonchev, V. Koelzer, and G. Rätsch",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.09.30.755585",
+    "date": "2026-10-05"
+  },
+  {
+    "title": "Octave: Scale-Resolved Evaluation of Spatial Gene Expression Prediction from Histology",
+    "authors": "Qing Wang, Si-Pei Gu, Qi-Zhen Lan, Xiao-Qian Jiang, Yi-Jiang Chen, and Qian-Qian Song",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.09.25.754484",
+    "date": "2026-10-01"
+  },
+  {
+    "title": "Towards Scalable Context-Aware Single-Cell Spatial Transcriptomics Prediction from Histology Images",
+    "authors": "Zi-Jun Gao, Chun-Bin Gu, Jin-Xi Xiang, Xiang-De Luo, and Pheng-Ann Heng",
+    "venue": "arXiv.org",
+    "year": 2026,
+    "link": "https://doi.org/10.48550/arXiv.2609.36429",
+    "date": "2026-09-29"
+  },
+  {
+    "title": "GeneRAG: A Retrieval-Augmented Framework for Spatially Resolved Gene Expression Prediction",
+    "authors": "Hyeongsub Kim, Sihyun Kim, Minyoung Cho, Sanghyun Jo, Minhyeong Lee, and Kyungsu Kim",
+    "venue": "Lecture notes in computer science",
+    "year": 2026,
+    "link": "https://doi.org/10.1007/978-3-032-38470-6_48",
+    "date": "2026-09-24"
+  },
+  {
+    "title": "SpaFactor: Lightweight Spatial Context-Aware Gene Program Modeling for Histology-to-Transcriptomics Inference",
+    "authors": "Shi-Ting Ruan, Xi-Tong Ling, Qi-Ming He, Zi-You Yan, Huai-Tian Yuan, Tian Guan, Ying Xiao, Xu Guan, and Yong-Hong He",
+    "venue": "arXiv.org",
+    "year": 2026,
+    "link": "https://doi.org/10.48550/arXiv.2609.28563",
+    "date": "2026-09-23"
+  },
+  {
+    "title": "CUBE: Multimodal Representation Learning Reveals Biological Structure Across Histomorphology, Spatial Protein Phenotypes, and Transcriptome-Associated Signals",
+    "authors": "葛志广, and Haoyang Cai",
+    "venue": "bioRxiv (Cold Spring Harbor Laboratory)",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.09.14.751379",
+    "date": "2026-09-20"
+  },
+  {
+    "title": "Artificial Intelligence for Molecular Biomarker Identification in Gastrointestinal and Hepatobiliary Cancers",
+    "authors": "Hyun-jong Jang, Kwangil Yim, and Sung-Hak Lee",
+    "venue": "International Journal of Molecular Sciences",
+    "year": 2026,
+    "link": "https://doi.org/10.3390/ijms27156969",
+    "date": "2026-08-01"
+  },
+  {
+    "title": "Trimodal, uncertainty-guided whole-slide framework for genome-scale spatial expression and image-only virtual perturbation in cancer cohorts",
+    "authors": "Zi-Jun Wang, Chong-Yi Yang, Xiao-Ya Tang, En-Zhi Yin, Yu-Xin Yao, Yue-Jun Luo, Jie He, and N. Sun",
+    "venue": "Genome Medicine",
+    "year": 2026,
+    "link": "https://doi.org/10.1186/s13073-026-01713-y",
+    "date": "2026-07-14"
+  },
+  {
+    "title": "Functional Depth Biomarkers Distinguish Lung Squamous Cell Carcinoma from Lung Adenocarcinoma",
+    "authors": "Sagnik Bhadury, Ashley P. Tsang, Dipankar Ray, K. Lagisetty, and Arvind Rao",
+    "venue": "Research Square",
+    "year": 2026,
+    "link": "https://doi.org/10.21203/rs.3.rs-9347794/v1",
+    "date": "2026-07-13"
+  },
+  {
+    "title": "JASPR: Joint Spatial Representation learning of histology and spatial genomics for improved virtual genomic screening and clinical prognostication",
+    "authors": "Marija Pizurica, Eric Zimmermann, Neil A. Tenenholtz, J. Hall, O. Gevaert, A. Amini, L. Crawford, and Kristen A. Severson",
+    "venue": "arXiv.org",
+    "year": 2026,
+    "link": "https://doi.org/10.48550/arXiv.2606.28395",
+    "date": "2026-06-24"
+  },
+  {
+    "title": "DeepSpot-M: a multimodal foundation model for transcriptome-wide virtual spatial transcriptomics from histology",
+    "authors": "Kalin Nonchev, Sebastian Dawo, Karīna Siliņa, Viktor Hendrik Koelzer, and Gunnar Rätsch",
+    "venue": "medRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.06.19.26356060",
+    "date": "2026-06-22"
+  },
+  {
+    "title": "Transcriptomics-Conditioned Virtual Tissue Synthesis via Diffusion Transformers",
+    "authors": "Pantelis R. Vlachas, K. Nonchev, V. Koelzer, and G. Rätsch",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.05.26.727902",
+    "date": "2026-05-29"
+  },
+  {
+    "title": "Pan-cancer virtual spatial transcriptomics from routine histology with Phoenix",
+    "authors": "Manuel Tran, R. Gindra, Philipp Putze, Sen-Bai Kang, G. Palla, Tina Kos, C. Falcomatà, Chen Wang, Ruifeng Guo, M. Boxberg, L. Berclaz, L. Lindner, L. Bergmayr, T. Knösel, P. Jurmeister, Frederick Klauschen, K. Homicsko, Raphael Gottardo, Markus Eckstein, C. Matek, Andreas Mock, F. Theis, Dieter Saur, and Ting-Ying Peng",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.04.25.720812",
+    "date": "2026-05-07"
+  },
+  {
+    "title": "Towards Cross-Sample Alignment for Multi-Modal Representation Learning in Spatial Transcriptomics",
+    "authors": "Ju Dai, Kalin Nonchev, V. Koelzer, and G. Rätsch",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.03.02.709002",
+    "date": "2026-03-03"
+  },
+  {
+    "title": "CancerSTFormer enables multi-scale analysis of spot-resolution spatial transcriptomes and dissects gene and immune regulatory responses to targeted therapies",
+    "authors": "Benjamin S. Strope, D. Varghese, William Z. Bowie, Stacy Wang, and Qian Zhu",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2025.12.22.696102",
+    "date": "2026-03-03"
+  },
+  {
+    "title": "Encoding functional edges in graphs to model spatially varying relationships in the tumor microenvironment",
+    "authors": "Ashley P. Tsang, Santhoshi N. Krishnan, Reva Kulkarni, Sagnik Bhadury, M. P. di Magliano, T. Frankel, and Arvind Rao",
+    "venue": "npj Artificial Intelligence",
+    "year": 2026,
+    "link": "https://doi.org/10.1038/s44387-026-00075-5",
+    "date": "2026-03-02"
+  },
+  {
+    "title": "Beyond alignment: synergistic integration is required for multimodal cell foundation models",
+    "authors": "Till Richter, Eric Zimmermann, J. Hall, Fabian J. Theis, Srivatsan Raghavan, Peter S. Winter, A. Amini, and L. Crawford",
+    "venue": "bioRxiv",
+    "year": 2026,
+    "link": "https://doi.org/10.64898/2026.02.23.707420",
+    "date": "2026-03-02"
+  },
+  {
+    "title": "Advances in predicting omics profiles from imaging data",
+    "authors": "Alex Beachum, Xue Xiao, Yuansheng Zhou, Qi-Wei Li, Guang-Hua Xiao, and Lin Xu",
+    "venue": "Briefings Bioinform.",
+    "year": 2026,
+    "link": "https://doi.org/10.1093/bib/bbag090",
+    "date": "2026-03-01"
+  },
+  {
+    "title": "DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision",
+    "authors": "Kalin Nonchev, Glib Manaiev, V. Koelzer, and G. Rätsch",
+    "venue": "bioRxiv",
+    "year": 2025,
+    "link": "https://doi.org/10.1101/2025.09.23.678121",
+    "date": "2025-10-22"
+  },
+  {
+    "title": "Transcriptomic Signatures in IgA Nephropathy: From Renal Tissue to Precision Risk Stratification",
+    "authors": "C. Delrue, and M. Speeckaert",
+    "venue": "International Journal of Molecular Sciences",
+    "year": 2025,
+    "link": "https://doi.org/10.3390/ijms262010055",
+    "date": "2025-10-01"
+  },
+  {
+    "title": "SpatialFinder: a human-in-the-loop vision-language framework for prioritizing high-value regions in spatial transcriptomics",
+    "authors": "Jonathan Xu, Michelle Jiang, Shunsuke Koga, Nancy R. Zhang, and Zhi Huang",
+    "venue": "bioRxiv",
+    "year": 2025,
+    "link": "https://doi.org/10.3389/fbinf.2026.1746714",
+    "date": "2025-08-21"
+  },
+  {
+    "title": "Molecularly informed analysis of histopathology images using natural language",
+    "authors": "Moritz Schaefer, Kalin Nonchev, Animesh Awasthi, Jake Burton, V. Koelzer, G. Rätsch, and Christoph Bock",
+    "venue": "bioRxiv",
+    "year": 2025,
+    "link": "https://doi.org/10.1101/2025.07.14.664402",
+    "date": "2025-07-18"
+  },
+  {
+    "title": "Towards interpretable molecular and spatial analysis of the tumor microenvironment from digital histopathology images with HistoTME-v2",
+    "authors": "Sushant Patkar, T. Rosean, Palak Patel, Stephanie A. Harmon, Peter L. Choyke, Tamara Jamaspishvili, and B. Turkbey",
+    "venue": "bioRxiv",
+    "year": 2025,
+    "link": "https://doi.org/10.1101/2025.06.11.658673",
+    "date": "2025-06-17"
+  },
+  {
+    "title": "Transitive Representation Learning Enhances Histopathology Annotation",
+    "authors": "Moritz Schaefer, Zoe Piran, Nils Philipp Walter, Animesh Awasthi, Christoph Bock, J. Leskovec, and Zinaida Good",
+    "venue": "",
+    "year": "",
+    "link": "https://www.semanticscholar.org/paper/7a1809700fe582d9229f4926d9749a8ddbd8c17f",
+    "date": ""
+  }
+]
