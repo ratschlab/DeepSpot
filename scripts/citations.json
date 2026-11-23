@@ -18,9 +18,9 @@
   {
     "title": "CellPlex: Benchmarking Single-Cell Spatial Proteomics Prediction from H&E",
     "authors": "Zi-Jun Gao, Yi-Jiang Chen, Xiang-De Luo, and Pheng-Ann Heng",
-    "venue": "",
+    "venue": "arXiv",
     "year": 2026,
-    "link": "https://www.semanticscholar.org/paper/920a40bf247e53248537f1c704490a4ca9b01482",
+    "link": "https://doi.org/10.48550/arxiv.2611.02506",
     "date": "2026-11-02"
   },
   {
@@ -94,6 +94,14 @@
     "year": 2026,
     "link": "https://doi.org/10.64898/2026.09.14.751379",
     "date": "2026-09-20"
+  },
+  {
+    "title": "STP-BENCH: A Unified Systematic Benchmark for Virtual Spatial Transcriptomics from Histopathology Images",
+    "authors": "Youngmin Chung, Ji Hun Ha, Andrew H. Song, Cristina Almagro-Pérez, Chaeyoung Seo, Won Jun Suh, Jeong Won Beom, Kyoung Bin Oh, Eytan Ruppin, Faisal Mahmood, and Joo Sang Lee",
+    "venue": "arXiv",
+    "year": 2026,
+    "link": "https://doi.org/10.48550/arxiv.2609.05956",
+    "date": "2026-09-05"
   },
   {
     "title": "Artificial Intelligence for Molecular Biomarker Identification in Gastrointestinal and Hepatobiliary Cancers",
@@ -192,6 +200,22 @@
     "date": "2026-03-01"
   },
   {
+    "title": "Towards Spatial Transcriptomics-driven Pathology Foundation Models",
+    "authors": "Konstantin Hemker, Andrew H. Song, Cristina Almagro-Pérez, Guillaume Jaume, Sophia Wagner, Anurag Jayant Vaidya, Nikola Simidjievski, Mateja Jamnik, and Faisal Mahmood",
+    "venue": "arXiv",
+    "year": 2026,
+    "link": "https://doi.org/10.48550/arxiv.2602.14177",
+    "date": "2026-02-15"
+  },
+  {
+    "title": "Predicting spatial transcriptomics from histology images: Progress, challenges, and directions",
+    "authors": "Kexin Xu, Hashem Koohy, and Agne Antanaviciute",
+    "venue": "",
+    "year": 2026,
+    "link": "https://doi.org/10.70401/exo.2026.0020",
+    "date": "2026-01-01"
+  },
+  {
     "title": "DeepSpot2Cell: Predicting Virtual Single-Cell Spatial Transcriptomics from H&E images using Spot-Level Supervision",
     "authors": "Kalin Nonchev, Glib Manaiev, V. Koelzer, and G. Rätsch",
     "venue": "bioRxiv",
@@ -222,6 +246,14 @@
     "year": 2025,
     "link": "https://doi.org/10.1101/2025.07.14.664402",
     "date": "2025-07-18"
+  },
+  {
+    "title": "From tissue architecture to clinical insights: Spatial transcriptomics in solid tumor studies",
+    "authors": "Arpit Sharma, Shruti S. Raut, Alok Kumar Shukla, Shivani Gupta, Abha Mishra, and Amit Kumar Singh",
+    "venue": "Seminars in Oncology",
+    "year": 2025,
+    "link": "https://doi.org/10.1016/j.seminoncol.2025.152389",
+    "date": "2025-07-15"
   },
   {
     "title": "Towards interpretable molecular and spatial analysis of the tumor microenvironment from digital histopathology images with HistoTME-v2",
